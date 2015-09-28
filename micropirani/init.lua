@@ -3,6 +3,7 @@ local SSID_PASSWORD = "***"
 local DISABLED_CHARSET = "[\r\n\",:]";
 local CMD = nil
 local ANSWER = nil
+
 -- udp server
 local function server_udp(client,data)
 CMD = string.gsub(data, DISABLED_CHARSET, "");  
