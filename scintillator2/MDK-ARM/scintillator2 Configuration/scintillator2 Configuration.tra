@@ -1,0 +1,49 @@
+*** Creating Trace Output File 'scintillator2 Configuration\scintillator2 Configuration.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_flash.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_pwr.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_rcc.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_flash_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_ll_usb.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_cortex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_dma.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_adc_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_gpio.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_adc.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_gpio_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_pcd_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_pcd.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_rcc_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_tim_ex.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_tim.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_it.o"'
+### List of Objects: adding '"scintillator2 configuration\usb_device.o"'
+### List of Objects: adding '"scintillator2 configuration\main.o"'
+### List of Objects: adding '"scintillator2 configuration\stm32f1xx_hal_msp.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_conf.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_cdc_if.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_desc.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_cdc.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_core.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_ioreq.o"'
+### List of Objects: adding '"scintillator2 configuration\usbd_ctlreq.o"'
+### List of Objects: adding '"scintillator2 configuration\startup_stm32f103xb.o"'
+### List of Objects: adding '"scintillator2 configuration\system_stm32f1xx.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 "scintillator2 configuration\stm32f1xx_hal_flash.o" "scintillator2 configuration\stm32f1xx_hal_pwr.o" "scintillator2 configuration\stm32f1xx_hal_rcc.o" "scintillator2 configuration\stm32f1xx_hal_flash_ex.o" "scintillator2 configuration\stm32f1xx_ll_usb.o" "scintillator2 configuration\stm32f1xx_hal.o" "scintillator2 configuration\stm32f1xx_hal_cortex.o" "scintillator2 configuration\stm32f1xx_hal_dma.o" "scintillator2 configuration\stm32f1xx_hal_adc_ex.o" "scintillator2 configuration\stm32f1xx_hal_gpio.o" "scintillator2 configuration\stm32f1xx_hal_adc.o" "scintillator2 configuration\stm32f1xx_hal_gpio_ex.o" "scintillator2 configuration\stm32f1xx_hal_pcd_ex.o" "scintillator2 configuration\stm32f1xx_hal_pcd.o" "scintillator2 configuration\stm32f1xx_hal_rcc_ex.o" "scintillator2 configuration\stm32f1xx_hal_tim_ex.o" "scintillator2 configuration\stm32f1xx_hal_tim.o" "scintillator2 configuration\stm32f1xx_it.o" "scintillator2 configuration\usb_device.o" "scintillator2 configuration\main.o" "scintillator2 configuration\stm32f1xx_hal_msp.o" "scintillator2 configuration\usbd_conf.o" "scintillator2 configuration\usbd_cdc_if.o" "scintillator2 configuration\usbd_desc.o" "scintillator2 configuration\usbd_cdc.o" "scintillator2 configuration\usbd_core.o" "scintillator2 configuration\usbd_ioreq.o" "scintillator2 configuration\usbd_ctlreq.o" "scintillator2 configuration\startup_stm32f103xb.o" "scintillator2 configuration\system_stm32f1xx.o" 
+--library_type=microlib --strict --scatter "scintillator2 Configuration\scintillator2 Configuration.sct" 
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list "scintillator2 Configuration.map" -o "scintillator2 Configuration\scintillator2 Configuration.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: 'scintillator2 Configuration\scintillator2 Configuration.axf'
+### ADS-LD Command File: 'scintillator2 Configuration\scintillator2 Configuration.lnp'
+### Checking for dirty Components...
+### Creating CmdFile 'scintillator2 Configuration\scintillator2 Configuration.lnp', Handle=0x00001AAC
+### Writing '.lnp' file
+### ADS-LD Command file 'scintillator2 Configuration\scintillator2 Configuration.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.
