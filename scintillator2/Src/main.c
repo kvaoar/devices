@@ -66,8 +66,7 @@ const uint8_t BufSize = 100;
 volatile uint16_t dma_arr[BufSize];
 volatile uint32_t total = 0;
 volatile uint16_t spectr[4096];
-volatile uint8_t tst1 = 0;
-volatile uint8_t tst2 = 0;
+
 
 void delay(uint32_t ck) {
 	volatile uint32_t counter = ck;
@@ -86,13 +85,6 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* AdcHandle)
 	for(int i = 0; i < BufSize/2; i++) spectr[dma_arr[i]] +=1;
 	total +=BufSize/2;
 }
-
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-if( GPIO_Pin == GPIO_PIN_10) tst1++;
-if( GPIO_Pin == GPIO_PIN_11) tst2++;
-}
-
 
 void USB_sprintf( char* s, uint32_t dig){
 			char buf[10];
@@ -155,11 +147,9 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);*/
 
-		USB_sprintf("<%d>",total);
-		USB_sprintf("<tst1 = %d>",tst1);
-		USB_sprintf("<tst2 = %d>[",tst2);
-		for(int i = 0; i < BufSize; i++) USB_sprintf("<%d>,",dma_arr[i]);
-		USB_ssprintf("]\r\n");
+		USB_sprintf("<%d>[",total);
+		for(int i = 0; i < 4096; i++) USB_sprintf("%d,",spectr[i]);
+		USB_ssprintf("]\n");
 
 		//total = 0;
 		//memset(arr,0,2*30);
