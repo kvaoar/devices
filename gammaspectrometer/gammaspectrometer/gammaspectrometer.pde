@@ -3,9 +3,10 @@ import processing.serial.*;
 Serial myPort;    // The serial port
 int[] arr = new int[4096];
 String s;
+int maxy = 0;
 void setup() { 
   size(800,600); 
-
+frameRate(60);
   // List all the available serial ports: 
   printArray(Serial.list()); 
   // I know that the first port in the serial list on my mac 
@@ -18,14 +19,21 @@ void setup() {
 } 
  
 void draw() { 
-  
+
+ background(0);
+  stroke(255,255,0);
+   fill(255);
+   smooth();
+
+line(0, height/2, width, height/2);
+
   if (s != null) {
+    println(s);
     String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
     println(inString[1]);
     String[] list = split(inString[2], ",");
-  for (int i=0 ;i<list.length-1;++i)
-  {arr[i] =  Integer.parseInt(trim(list[i]));} 
-  int maxy = max(arr);
+  for (int i=0 ;i<list.length-1;++i) arr[i] =  Integer.parseInt(trim(list[i]));
+  maxy = max(arr);
   println(maxy);
   println("ok");
     
@@ -33,13 +41,12 @@ void draw() {
   }
   
   
-  for(int i = 0; i < 4096; i++) {
-    int Gx = round(map(i, 0,4096,0,width));
-    int Gy = round(map(arr[i], 0,300,height,0));
+  for(int i = 1; i < 500; i++) {
+    float Gx = (map(i, 1,500,0,width));
+    float Gy = (map(arr[i], 0,500,0, height));
     line(Gx,0,Gx,Gy);
   }
   
-  background(0); 
 } 
  
 void serialEvent(Serial p) { 

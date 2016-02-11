@@ -151,8 +151,8 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
 		for(int i = 0; i < 4096; i++) USB_sprintf("%d,",spectr[i]);
 		USB_ssprintf("]\n");
 
-		//total = 0;
-		//memset(arr,0,2*30);
+		total = 0;
+		memset((void*)spectr,0,2*4096);
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_SET);
 		delay(10);
 		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_RESET);
@@ -230,7 +230,7 @@ void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
@@ -247,7 +247,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 48*6;
+  htim2.Init.Period = 48*3;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   HAL_TIM_Base_Init(&htim2);
 
@@ -270,7 +270,7 @@ void MX_TIM2_Init(void)
   HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 48*4;
+  sConfigOC.Pulse = 48*2;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2);
