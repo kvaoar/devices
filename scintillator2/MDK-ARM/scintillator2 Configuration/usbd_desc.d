@@ -1,13 +1,13 @@
 scintillator2 Configuration\usbd_desc.o: ../Src/usbd_desc.c
 scintillator2 Configuration\usbd_desc.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h
 scintillator2 Configuration\usbd_desc.o: ../Inc/usbd_conf.h
-scintillator2 Configuration\usbd_desc.o: E:\stm32\Keil\ARM\ARMCC\bin\..\include\stdio.h
-scintillator2 Configuration\usbd_desc.o: E:\stm32\Keil\ARM\ARMCC\bin\..\include\stdlib.h
-scintillator2 Configuration\usbd_desc.o: E:\stm32\Keil\ARM\ARMCC\bin\..\include\string.h
+scintillator2 Configuration\usbd_desc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+scintillator2 Configuration\usbd_desc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
+scintillator2 Configuration\usbd_desc.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Include/core_cm3.h
-scintillator2 Configuration\usbd_desc.o: E:\stm32\Keil\ARM\ARMCC\bin\..\include\stdint.h
+scintillator2 Configuration\usbd_desc.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Include/core_cmInstr.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
 scintillator2 Configuration\usbd_desc.o: ../Drivers/CMSIS/Include/core_cmFunc.h

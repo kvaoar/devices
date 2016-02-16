@@ -79,11 +79,11 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     __ADC1_CLK_ENABLE();
   
     /**ADC1 GPIO Configuration    
-    PA0-WKUP     ------> ADC1_IN0 
+    PB0     ------> ADC1_IN8 
     */
     GPIO_InitStruct.Pin = GPIO_PIN_0;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
     /* Peripheral DMA init*/
   
@@ -118,9 +118,9 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     __ADC1_CLK_DISABLE();
   
     /**ADC1 GPIO Configuration    
-    PA0-WKUP     ------> ADC1_IN0 
+    PB0     ------> ADC1_IN8 
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_0);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0);
 
     /* Peripheral DMA DeInit*/
     HAL_DMA_DeInit(hadc->DMA_Handle);

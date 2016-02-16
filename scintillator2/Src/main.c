@@ -62,7 +62,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-const uint8_t BufSize = 100;
+const uint8_t BufSize = 20;
 volatile uint16_t dma_arr[BufSize];
 volatile uint32_t total = 0;
 volatile uint16_t spectr[4096];
@@ -139,7 +139,7 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
+		for(int i = 0; i < 3; i++)	HAL_Delay(1000);
 		
 	//  GPIO_InitTypeDef GPIO_InitStruct;
 	  /*Configure GPIO pin : PB11 */
@@ -151,11 +151,11 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
 		for(int i = 0; i < 4096; i++) USB_sprintf("%d,",spectr[i]);
 		USB_ssprintf("]\n");
 
-		total = 0;
-		memset((void*)spectr,0,2*4096);
-		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_SET);
-		delay(10);
-		HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_RESET);
+		//total = 0;
+		//memset((void*)spectr,0,2*4096);
+		//HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_SET);
+		//delay(10);
+		//HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_RESET);
 
 		  /*Configure GPIO pin : PB11 */
   /*GPIO_InitStruct.Pin = GPIO_PIN_11;
@@ -228,9 +228,9 @@ void MX_ADC1_Init(void)
 
     /**Configure Regular Channel 
     */
-  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
@@ -247,7 +247,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 48*3;
+  htim2.Init.Period = 48*6;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   HAL_TIM_Base_Init(&htim2);
 
@@ -270,7 +270,7 @@ void MX_TIM2_Init(void)
   HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 48*2;
+  sConfigOC.Pulse = 48*4;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2);
@@ -306,8 +306,8 @@ void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __GPIOC_CLK_ENABLE();
   __GPIOD_CLK_ENABLE();
-  __GPIOA_CLK_ENABLE();
   __GPIOB_CLK_ENABLE();
+  __GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -322,7 +322,6 @@ void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
-
 
 /* USER CODE BEGIN 4 */
 
