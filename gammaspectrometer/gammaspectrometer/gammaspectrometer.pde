@@ -9,7 +9,7 @@ int zoom = 1;
 String s;
 int maxy = 10;
 void setup() { 
-  size(1200,800); 
+  size(800,800); 
    lin_arr = new int[width+1];
 frameRate(60);
   // List all the available serial ports: 
@@ -46,16 +46,22 @@ void draw() {
     catch(Exception e) { s = null;};
     s = null;
     for(int i = 0; i < width; i++) lin_arr[i] = 0;
+    
       for(int i = 1; i < 4095; i++) {
+        
     int Gx = round(map(i, 1,4095,0,width));
-    int Gy = round(map(arr[i], 0,maxy,0, height));
+    float Gy = round(map(arr[i], 0,maxy,0, height));
+    
     lin_arr[Gx] += Gy;
   }
+  
+ for(int i = 0; i < width; i++) lin_arr[i] /= (4096/width);
+  
   }
   
 
   
-  for(int i = 0; i < width; i++) line(i,height,i,height-lin_arr[i]/(1.1*4096/width));
+  for(int i = 0; i < width; i++) line(i,height,i,height-lin_arr[i]);
   
 } 
  
