@@ -130,10 +130,10 @@ int main(void)
 	HAL_ADCEx_Calibration_Start(&hadc1);
 	total = 0;
 
-HAL_TIM_OnePulse_Start(&htim2,TIM_CHANNEL_2);
-HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_1);
-HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_2);
-HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
+	HAL_TIM_OnePulse_Start(&htim2,TIM_CHANNEL_2);
+	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_1);
+	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_2);
+	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -142,8 +142,8 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   {
 		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
 		
-		USB_sprintf("<%d>[",total);
-		for(int i = 0; i < 4096; i++) USB_sprintf("%d,",spectr[i]);
+		USB_sprintf("<%X>[",total);
+		for(int i = 0; i < 4096; i++) USB_sprintf("%X,",spectr[i]);
 		USB_ssprintf("]\n");
 	
   /* USER CODE END WHILE */

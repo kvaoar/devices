@@ -38,11 +38,11 @@ void draw() {
       try{
         String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
         println(inString[1]);
-        int tmp = Integer.parseInt(trim(inString[1]));
+        int tmp = unhex(inString[1]);
         partrate = tmp - prev;
         prev = tmp;
         String[] list = split(inString[2], ",");
-        for (int i=1 ;i<list.length-2;++i) arr[i] =  Integer.parseInt(trim(list[i]));
+        for (int i=1 ;i<list.length-2;++i) arr[i] =  unhex(list[i]);
         maxy = max(arr);
         if(maxy < 10) maxy = 10;
         println(maxy);
@@ -54,8 +54,8 @@ void draw() {
      // arr[4095] = 0;
       
      for(int i = 0; i < width; i++) lin_arr[i] = 0;
-     int scaleX = 1024/width; 
-     for(int i = 0; i < width; i++)  lin_arr[i] = arr[i];  /*for(int j = 1; j < 2*scaleX; j++) lin_arr[i] += arr[i*scaleX+j];*/
+     int scaleX = 2048/width; 
+     for(int i = 0; i < width; i++) for(int j = 1; j < 2*scaleX; j++) lin_arr[i] += arr[i*scaleX+j];
      float lin_max = max(lin_arr);
      for(int i = 0; i < width; i++) lin_arr[i] *= ((0.8*height)/lin_max);
   }
