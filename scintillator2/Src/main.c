@@ -127,11 +127,9 @@ int main(void)
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
-	
+	HAL_ADCEx_Calibration_Start(&hadc1);
 	total = 0;
-//HAL_ADC_Start_IT(&hadc1);
-//HAL_ADCEx_Calibration_Start(&hadc1);
-//HAL_TIM_Base_Start(&htim2);
+
 HAL_TIM_OnePulse_Start(&htim2,TIM_CHANNEL_2);
 HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_1);
 HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_2);
@@ -144,27 +142,9 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   {
 		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
 		
-	//  GPIO_InitTypeDef GPIO_InitStruct;
-	  /*Configure GPIO pin : PB11 */
- /* GPIO_InitStruct.Pin = GPIO_PIN_11;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);*/
-
 		USB_sprintf("<%d>[",total);
 		for(int i = 0; i < 4096; i++) USB_sprintf("%d,",spectr[i]);
 		USB_ssprintf("]\n");
-
-		//total = 0;
-		//memset((void*)spectr,0,2*4096);
-		//HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_SET);
-		//delay(10);
-		//HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13, GPIO_PIN_RESET);
-
-		  /*Configure GPIO pin : PB11 */
-  /*GPIO_InitStruct.Pin = GPIO_PIN_11;
-  GPIO_InitStruct.Mode = GPIO_MODE_EVT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);*/
 	
   /* USER CODE END WHILE */
 
@@ -224,7 +204,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC2;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
   HAL_ADC_Init(&hadc1);
@@ -233,7 +213,7 @@ void MX_ADC1_Init(void)
     */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
@@ -267,8 +247,8 @@ void MX_TIM1_Init(void)
   sSlaveConfig.InputTrigger = TIM_TS_ITR1;
   HAL_TIM_SlaveConfigSynchronization(&htim1, &sSlaveConfig);
 
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC2REF;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig);
 
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
