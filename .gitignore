@@ -46,3 +46,4 @@ Temporary Items
 *.properties
 *.bak
 *.o
+*.d
