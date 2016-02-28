@@ -9,7 +9,7 @@ int zoom = 1;
 String s;
 int maxy = 10;
 void setup() { 
-  size(800,800); 
+  size(1000,600); 
    lin_arr = new int[width+1];
 frameRate(60);
   // List all the available serial ports: 
@@ -27,41 +27,47 @@ void draw() {
 
  background(0);
   stroke(255,255,0);
-   fill(255);
+   fill(255,255,0);
    smooth();
 
 
   if (s != null) {
-    println(s);
-    try{
-    String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
-    println(inString[1]);
-    String[] list = split(inString[2], ",");
-  for (int i=1 ;i<list.length-2;++i) arr[i] =  Integer.parseInt(trim(list[i]));
-  maxy = max(arr);
-  if(maxy < 10) maxy = 10;
-  println(maxy);
-  println("ok");
-    }
-    catch(Exception e) { s = null;};
-    s = null;
-    for(int i = 0; i < width; i++) lin_arr[i] = 0;
-    
-      for(int i = 1; i < 4095; i++) {
-        
-    int Gx = round(map(i, 1,4095,0,width));
-    float Gy = round(map(arr[i], 0,maxy,0, height));
-    
-    lin_arr[Gx] += Gy;
-  }
-  
- for(int i = 0; i < width; i++) lin_arr[i] /= (4096/width);
-  
+      println(s);
+      try{
+        String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
+        println(inString[1]);
+        String[] list = split(inString[2], ",");
+        for (int i=1 ;i<list.length-2;++i) arr[i] =  Integer.parseInt(trim(list[i]));
+        maxy = max(arr);
+        if(maxy < 10) maxy = 10;
+        println(maxy);
+        println("ok");
+      }
+      catch(Exception e) { s = null;};
+      s = null;
+      arr[0] = 0;
+      arr[4095] = 0;
+      
+     for(int i = 0; i < width; i++) lin_arr[i] = 0;
+     int scaleX = 4096/width; 
+     for(int i = 0; i < width; i++)  for(int j = 1; j < 2*scaleX; j++) lin_arr[i] += arr[i*scaleX+j];
+     int lin_max = max(lin_arr);
+     for(int i = 0; i < width; i++) lin_arr[i] *= ((0.8*height)/lin_max);
   }
   
 
+
+    PShape path = createShape();
+  path.beginShape();
+ for(int i = 1; i < width; i++) {
+    path.vertex(i,  height-lin_arr[i]);
+
+  }
+  // Don't "CLOSE" a shape if you want it to be a path
+  path.endShape();
   
-  for(int i = 0; i < width; i++) line(i,height,i,height-lin_arr[i]);
+  shape(path);
+ 
   
 } 
  

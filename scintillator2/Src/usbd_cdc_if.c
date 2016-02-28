@@ -254,6 +254,10 @@ static int8_t CDC_Control_FS  (uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 6 */
+	
+//	for( uint32_t i = RxCursor; i < ((*Len<(APP_RX_DATA_SIZE-RxCursor))?(*Len+RxCursor):(APP_RX_DATA_SIZE)); i++ )
+ //  ((unsigned char*)UserRxBufferFS)[i] = ((unsigned char*)Buf)[i];
+	USBD_CDC_ReceivePacket(hUsbDevice_0);
   return (USBD_OK);
   /* USER CODE END 6 */ 
 }
@@ -273,8 +277,26 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 {
   uint8_t result = USBD_OK;
   /* USER CODE BEGIN 7 */ 
-  USBD_CDC_SetTxBuffer(hUsbDevice_0, Buf, Len);   
-  result = USBD_CDC_TransmitPacket(hUsbDevice_0);
+	uint16_t cur = 0;
+	while(Len > cur){
+		memset(UserTxBufferFS,0,APP_TX_DATA_SIZE);
+	if((Len-cur) <= APP_TX_DATA_SIZE)
+	{
+		memcpy((void*)UserTxBufferFS,(void*)(&Buf[cur]),Len-cur);
+		USBD_CDC_SetTxBuffer(hUsbDevice_0, UserTxBufferFS, Len-cur);   
+		do {
+			result = USBD_CDC_TransmitPacket(hUsbDevice_0);
+		} while(result == USBD_BUSY);
+		cur = Len;
+	} else {
+		memcpy((void*)UserTxBufferFS,(void*)(&Buf[cur]),APP_TX_DATA_SIZE);
+		USBD_CDC_SetTxBuffer(hUsbDevice_0, UserTxBufferFS, APP_TX_DATA_SIZE);   
+		do {
+			result = USBD_CDC_TransmitPacket(hUsbDevice_0);
+		} while(result == USBD_BUSY);
+		cur += APP_TX_DATA_SIZE;
+	}
+}
   /* USER CODE END 7 */ 
   return result;
 }
