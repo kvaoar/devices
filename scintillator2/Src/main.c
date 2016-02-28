@@ -40,7 +40,9 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
+TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
@@ -51,7 +53,9 @@ TIM_HandleTypeDef htim2;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 
 /* USER CODE BEGIN PFP */
@@ -60,7 +64,7 @@ static void MX_TIM2_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-const uint8_t BufSize = 20;
+const uint8_t BufSize = 50;
 volatile uint16_t dma_arr[BufSize];
 volatile uint32_t total = 0;
 volatile uint16_t spectr[4096];
@@ -89,10 +93,6 @@ void USB_sprintf( char* s, uint32_t dig){
 		memset(buf,0,10);
 			sprintf(buf,s,dig);
 			CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
-<<<<<<< HEAD
-=======
-		HAL_Delay(5);
->>>>>>> parent of 4b2ee23... upd
 };
 
 void USB_ssprintf( char* s){
@@ -100,10 +100,6 @@ void USB_ssprintf( char* s){
 		memset(buf,0,10);
 			strcpy(buf,s);
 			CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
-<<<<<<< HEAD
-=======
-		HAL_Delay(5);
->>>>>>> parent of 4b2ee23... upd
 };
 /* USER CODE END 0 */
 
@@ -124,7 +120,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
+  MX_TIM1_Init();
   MX_TIM2_Init();
   MX_USB_DEVICE_Init();
 
@@ -144,7 +142,7 @@ HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		for(int i = 0; i < 3; i++)	HAL_Delay(1000);
+		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
 		
 	//  GPIO_InitTypeDef GPIO_InitStruct;
 	  /*Configure GPIO pin : PB11 */
@@ -202,7 +200,7 @@ void SystemClock_Config(void)
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
 
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC|RCC_PERIPHCLK_USB;
-  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV4;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
   PeriphClkInit.UsbClockSelection = RCC_USBPLLCLK_DIV1;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
@@ -226,25 +224,20 @@ void MX_ADC1_Init(void)
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
-<<<<<<< HEAD
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-=======
-  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_EXT_IT11;
->>>>>>> parent of 4b2ee23... upd
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
   HAL_ADC_Init(&hadc1);
 
     /**Configure Regular Channel 
     */
-  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_28CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
 
-<<<<<<< HEAD
 /* TIM1 init function */
 void MX_TIM1_Init(void)
 {
@@ -301,8 +294,6 @@ void MX_TIM1_Init(void)
 
 }
 
-=======
->>>>>>> parent of 4b2ee23... upd
 /* TIM2 init function */
 void MX_TIM2_Init(void)
 {
@@ -315,11 +306,7 @@ void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-<<<<<<< HEAD
   htim2.Init.Period = 144;
-=======
-  htim2.Init.Period = 48*6;
->>>>>>> parent of 4b2ee23... upd
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   HAL_TIM_Base_Init(&htim2);
 
@@ -337,19 +324,29 @@ void MX_TIM2_Init(void)
   sSlaveConfig.TriggerFilter = 2;
   HAL_TIM_SlaveConfigSynchronization(&htim2, &sSlaveConfig);
 
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
   HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig);
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-<<<<<<< HEAD
   sConfigOC.Pulse = 120;
-=======
-  sConfigOC.Pulse = 48*4;
->>>>>>> parent of 4b2ee23... upd
   sConfigOC.OCPolarity = TIM_OCPOLARITY_LOW;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2);
+
+}
+
+/** 
+  * Enable DMA controller clock
+  */
+void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
@@ -365,23 +362,8 @@ void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __GPIOD_CLK_ENABLE();
-  __GPIOB_CLK_ENABLE();
   __GPIOA_CLK_ENABLE();
-<<<<<<< HEAD
-=======
-
-  /*Configure GPIO pin : PC13 */
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
->>>>>>> parent of 4b2ee23... upd
-
-  /*Configure GPIO pins : PB10 PB11 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_11;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  __GPIOB_CLK_ENABLE();
 
 }
 

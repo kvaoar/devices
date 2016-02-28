@@ -2,19 +2,17 @@ import processing.serial.*;
  
 Serial myPort;    // The serial port
 int[] arr = new int[4096];
-int[] lin_arr;
+float[] lin_arr;
 
 int zoom = 1;
+int prev = 0;
+int partrate = 0;
 
 String s;
 int maxy = 10;
 void setup() { 
-<<<<<<< HEAD
-  size(1000,600); 
-=======
-  size(1200,800); 
->>>>>>> parent of 4b2ee23... upd
-   lin_arr = new int[width+1];
+  size(1024,600); 
+   lin_arr = new float[width+1];
 frameRate(60);
   // List all the available serial ports: 
   printArray(Serial.list()); 
@@ -36,11 +34,13 @@ void draw() {
 
 
   if (s != null) {
-<<<<<<< HEAD
       println(s);
       try{
         String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
         println(inString[1]);
+        int tmp = Integer.parseInt(trim(inString[1]));
+        partrate = tmp - prev;
+        prev = tmp;
         String[] list = split(inString[2], ",");
         for (int i=1 ;i<list.length-2;++i) arr[i] =  Integer.parseInt(trim(list[i]));
         maxy = max(arr);
@@ -50,54 +50,21 @@ void draw() {
       }
       catch(Exception e) { s = null;};
       s = null;
-      arr[0] = 0;
-      arr[4095] = 0;
+     // arr[0] = 0;
+     // arr[4095] = 0;
       
      for(int i = 0; i < width; i++) lin_arr[i] = 0;
-     int scaleX = 4096/width; 
-     for(int i = 0; i < width; i++)  for(int j = 1; j < 2*scaleX; j++) lin_arr[i] += arr[i*scaleX+j];
-     int lin_max = max(lin_arr);
+     int scaleX = 1024/width; 
+     for(int i = 0; i < width; i++)  lin_arr[i] = arr[i];  /*for(int j = 1; j < 2*scaleX; j++) lin_arr[i] += arr[i*scaleX+j];*/
+     float lin_max = max(lin_arr);
      for(int i = 0; i < width; i++) lin_arr[i] *= ((0.8*height)/lin_max);
-=======
-    println(s);
-    try{
-    String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
-    println(inString[1]);
-    String[] list = split(inString[2], ",");
-  for (int i=1 ;i<list.length-2;++i) arr[i] =  Integer.parseInt(trim(list[i]));
-  maxy = max(arr);
-  if(maxy < 10) maxy = 10;
-  println(maxy);
-  println("ok");
-    }
-    catch(Exception e) { s = null;};
-    s = null;
-    for(int i = 0; i < width; i++) lin_arr[i] = 0;
-      for(int i = 1; i < 4095; i++) {
-    int Gx = round(map(i, 1,4095,0,width));
-    int Gy = round(map(arr[i], 0,maxy,0, height));
-    lin_arr[Gx] += Gy;
-  }
->>>>>>> parent of 4b2ee23... upd
   }
   
 
+ for(int i = 0; i < width; i++) line(i, height, i,  height-lin_arr[i]);
 
-    PShape path = createShape();
-  path.beginShape();
- for(int i = 1; i < width; i++) {
-    path.vertex(i,  height-lin_arr[i]);
-
-  }
-  // Don't "CLOSE" a shape if you want it to be a path
-  path.endShape();
-  
-<<<<<<< HEAD
-  shape(path);
+text(str(partrate/5)+"p/s",width-50,10);
  
-=======
-  for(int i = 0; i < width; i++) line(i,height,i,height-lin_arr[i]/(1.1*4096/width));
->>>>>>> parent of 4b2ee23... upd
   
 } 
  

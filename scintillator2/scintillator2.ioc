@@ -1,50 +1,36 @@
 #MicroXplorer Configuration settings - do not modify
-<<<<<<< HEAD
-ADC1.Channel-41\#ChannelRegularConversion=ADC_CHANNEL_8
-ADC1.IPParameters=Rank-41\#ChannelRegularConversion,Channel-41\#ChannelRegularConversion,SamplingTime-41\#ChannelRegularConversion,NbrOfConversionFlag,master
+ADC1.Channel-45\#ChannelRegularConversion=ADC_CHANNEL_0
+ADC1.IPParameters=Rank-45\#ChannelRegularConversion,Channel-45\#ChannelRegularConversion,SamplingTime-45\#ChannelRegularConversion,NbrOfConversionFlag,master
 ADC1.NbrOfConversionFlag=1
-ADC1.Rank-41\#ChannelRegularConversion=1
-ADC1.SamplingTime-41\#ChannelRegularConversion=ADC_SAMPLETIME_1CYCLE_5
-=======
-ADC1.Channel-5\#ChannelRegularConversion=ADC_CHANNEL_8
-ADC1.ContinuousConvMode=DISABLE
-ADC1.DataAlign=ADC_DATAALIGN_RIGHT
-ADC1.DiscontinuousConvMode=DISABLE
-ADC1.EnableAnalogWatchDog=false
-ADC1.EnableRegularConversion=ENABLE
-ADC1.ExternalTrigConv=ADC_EXTERNALTRIGCONV_EXT_IT11
-ADC1.ExternalTrigConvEdgeChoice=RISING
-ADC1.IPParameters=Rank-5\#ChannelRegularConversion,Channel-5\#ChannelRegularConversion,SamplingTime-5\#ChannelRegularConversion,NbrOfConversionFlag,DataAlign,ScanConvMode,ContinuousConvMode,DiscontinuousConvMode,EnableRegularConversion,NbrOfConversion,ExternalTrigConvEdgeChoice,InjNumberOfConversion,EnableAnalogWatchDog,ExternalTrigConv,master
-ADC1.InjNumberOfConversion=0
-ADC1.NbrOfConversion=1
-ADC1.NbrOfConversionFlag=1
-ADC1.Rank-5\#ChannelRegularConversion=1
-ADC1.SamplingTime-5\#ChannelRegularConversion=ADC_SAMPLETIME_28CYCLES_5
-ADC1.ScanConvMode=ADC_SCAN_DISABLE
->>>>>>> parent of 4b2ee23... upd
+ADC1.Rank-45\#ChannelRegularConversion=1
+ADC1.SamplingTime-45\#ChannelRegularConversion=ADC_SAMPLETIME_1CYCLE_5
 ADC1.master=1
+Dma.ADC1.0.Direction=DMA_PERIPH_TO_MEMORY
+Dma.ADC1.0.Instance=DMA1_Channel1
+Dma.ADC1.0.MemDataAlignment=DMA_MDATAALIGN_HALFWORD
+Dma.ADC1.0.MemInc=DMA_MINC_ENABLE
+Dma.ADC1.0.Mode=DMA_CIRCULAR
+Dma.ADC1.0.PeriphDataAlignment=DMA_PDATAALIGN_HALFWORD
+Dma.ADC1.0.PeriphInc=DMA_PINC_DISABLE
+Dma.ADC1.0.Priority=DMA_PRIORITY_LOW
+Dma.ADC1.0.RequestParameters=Instance,Direction,PeriphInc,MemInc,PeriphDataAlignment,MemDataAlignment,Mode,Priority
+Dma.Request0=ADC1
+Dma.RequestsNb=1
 File.Version=5
 KeepUserPlacement=false
 Mcu.Family=STM32F1
 Mcu.IP0=ADC1
-<<<<<<< HEAD
-Mcu.IP1=NVIC
-Mcu.IP2=RCC
-Mcu.IP3=SYS
-Mcu.IP4=TIM1
-=======
 Mcu.IP1=DMA
 Mcu.IP2=NVIC
 Mcu.IP3=RCC
 Mcu.IP4=SYS
->>>>>>> parent of 4b2ee23... upd
-Mcu.IP5=TIM2
-Mcu.IP6=USB
-Mcu.IP7=USB_DEVICE
-Mcu.IPNb=8
+Mcu.IP5=TIM1
+Mcu.IP6=TIM2
+Mcu.IP7=USB
+Mcu.IP8=USB_DEVICE
+Mcu.IPNb=9
 Mcu.Name=STM32F103C(8-B)Tx
 Mcu.Package=LQFP48
-<<<<<<< HEAD
 Mcu.Pin0=PD0-OSC_IN
 Mcu.Pin1=PD1-OSC_OUT
 Mcu.Pin10=PB3
@@ -56,7 +42,7 @@ Mcu.Pin15=VP_TIM2_VS_ControllerModeTrigger
 Mcu.Pin16=VP_TIM2_VS_ClockSourceINT
 Mcu.Pin17=VP_TIM2_VS_OPM
 Mcu.Pin18=VP_USB_DEVICE_VS_USB_DEVICE_CDC_FS
-Mcu.Pin2=PB0
+Mcu.Pin2=PA0-WKUP
 Mcu.Pin3=PA8
 Mcu.Pin4=PA9
 Mcu.Pin5=PA11
@@ -65,34 +51,15 @@ Mcu.Pin7=PA13
 Mcu.Pin8=PA14
 Mcu.Pin9=PA15
 Mcu.PinsNb=19
-=======
-Mcu.Pin0=PC13-TAMPER-RTC
-Mcu.Pin1=PD0-OSC_IN
-Mcu.Pin10=PA14
-Mcu.Pin11=PA15
-Mcu.Pin12=PB3
-Mcu.Pin13=VP_TIM2_VS_ControllerModeTrigger
-Mcu.Pin14=VP_TIM2_VS_ClockSourceINT
-Mcu.Pin15=VP_TIM2_VS_OPM
-Mcu.Pin16=VP_USB_DEVICE_VS_USB_DEVICE_CDC_FS
-Mcu.Pin2=PD1-OSC_OUT
-Mcu.Pin3=PA2
-Mcu.Pin4=PB0
-Mcu.Pin5=PB10
-Mcu.Pin6=PB11
-Mcu.Pin7=PA11
-Mcu.Pin8=PA12
-Mcu.Pin9=PA13
-Mcu.PinsNb=17
->>>>>>> parent of 4b2ee23... upd
 Mcu.UserConstants=
 Mcu.UserName=STM32F103C8Tx
 MxCube.Version=4.12.0
 MxDb.Version=DB.4.0.120
+NVIC.DMA1_Channel1_IRQn=true\:0\:0\:false
 NVIC.PriorityGroup=NVIC_PRIORITYGROUP_4
 NVIC.SysTick_IRQn=true\:0\:0\:true
-NVIC.USB_HP_CAN1_TX_IRQn=true\:0\:0\:false
 NVIC.USB_LP_CAN1_RX0_IRQn=true\:0\:0\:true
+PA0-WKUP.Signal=ADCx_IN0
 PA11.Mode=Device
 PA11.Signal=USB_DM
 PA12.Mode=Device
@@ -102,18 +69,8 @@ PA13.Signal=SYS_JTMS-SWDIO
 PA14.Mode=Serial_Wire
 PA14.Signal=SYS_JTCK-SWCLK
 PA15.Signal=S_TIM2_CH1_ETR
-<<<<<<< HEAD
 PA8.Signal=S_TIM1_CH1
 PA9.Signal=S_TIM1_CH2
-PB0.Signal=ADCx_IN8
-=======
-PA2.Signal=S_TIM2_CH3
-PB0.Signal=ADCx_IN8
-PB10.Locked=true
-PB10.Signal=GPXTI10
-PB11.Locked=true
-PB11.Signal=GPXTI11
->>>>>>> parent of 4b2ee23... upd
 PB3.Signal=S_TIM2_CH2
 PCC.Checker=false
 PCC.Line=STM32F103
@@ -146,8 +103,8 @@ ProjectManager.ProjectFileName=scintillator2.ioc
 ProjectManager.ProjectName=scintillator2
 ProjectManager.TargetToolchain=MDK-ARM V4
 ProjectManager.ToolChainLocation=
-RCC.ADCFreqValue=12000000
-RCC.ADCPresc=RCC_ADCPCLK2_DIV4
+RCC.ADCFreqValue=8000000
+RCC.ADCPresc=RCC_ADCPCLK2_DIV6
 RCC.AHBFreq_Value=48000000
 RCC.APB1CLKDivider=RCC_HCLK_DIV2
 RCC.APB1Freq_Value=24000000
@@ -168,24 +125,16 @@ RCC.SYSCLKSource=RCC_SYSCLKSOURCE_PLLCLK
 RCC.TimSysFreq_Value=48000000
 RCC.USBFreq_Value=48000000
 RCC.VCOOutput2Freq_Value=8000000
-SH.ADCx_IN8.0=ADC1_IN8,IN8
-SH.ADCx_IN8.ConfNb=1
-<<<<<<< HEAD
+SH.ADCx_IN0.0=ADC1_IN0,IN0
+SH.ADCx_IN0.ConfNb=1
 SH.S_TIM1_CH1.0=TIM1_CH1,PWM Generation1 CH1
 SH.S_TIM1_CH1.ConfNb=1
 SH.S_TIM1_CH2.0=TIM1_CH2,PWM Generation2 CH2
 SH.S_TIM1_CH2.ConfNb=1
-=======
-SH.GPXTI10.0=GPIO_EXTI10
-SH.GPXTI10.ConfNb=1
-SH.GPXTI11.0=ADC1_EXTI11,EXTI11-Regular-Conversion-Trigger
-SH.GPXTI11.ConfNb=1
->>>>>>> parent of 4b2ee23... upd
 SH.S_TIM2_CH1_ETR.0=TIM2_ETR,TriggerSource_ETR
 SH.S_TIM2_CH1_ETR.ConfNb=1
 SH.S_TIM2_CH2.0=TIM2_CH2,PWM Generation2 CH2
 SH.S_TIM2_CH2.ConfNb=1
-<<<<<<< HEAD
 TIM1.Channel-PWM\ Generation2\ CH2=TIM_CHANNEL_2
 TIM1.IPParameters=Period,TIM_MasterSlaveMode,TIM_MasterOutputTrigger,OCPolarity_2,OCPolarity_1,Pulse-PWM Generation1 CH1,Channel-PWM Generation2 CH2,Pulse-PWM Generation2 CH2
 TIM1.OCPolarity_1=TIM_OCPOLARITY_LOW
@@ -195,14 +144,8 @@ TIM1.Pulse-PWM\ Generation1\ CH1=1
 TIM1.Pulse-PWM\ Generation2\ CH2=36
 TIM1.TIM_MasterOutputTrigger=TIM_TRGO_RESET
 TIM1.TIM_MasterSlaveMode=TIM_MASTERSLAVEMODE_DISABLE
-=======
-SH.S_TIM2_CH3.0=TIM2_CH3,PWM Generation3 CH3
-SH.S_TIM2_CH3.ConfNb=1
->>>>>>> parent of 4b2ee23... upd
 TIM2.Channel-PWM\ Generation2\ CH2=TIM_CHANNEL_2
-TIM2.Channel-PWM\ Generation3\ CH3=TIM_CHANNEL_3
 TIM2.ClockDivision=TIM_CLOCKDIVISION_DIV1
-<<<<<<< HEAD
 TIM2.IPParameters=Period,Channel-PWM Generation2 CH2,Prescaler,OCMode_PWM-PWM Generation2 CH2,OCFastMode_PWM-PWM Generation2 CH2,OCPolarity_2,Pulse-PWM Generation2 CH2,ClockDivision,TIM_MasterOutputTrigger,TIM_MasterSlaveMode,Slave_TriggerFilter
 TIM2.OCFastMode_PWM-PWM\ Generation2\ CH2=TIM_OCFAST_DISABLE
 TIM2.OCMode_PWM-PWM\ Generation2\ CH2=TIM_OCMODE_PWM1
@@ -214,22 +157,10 @@ TIM2.Slave_TriggerFilter=2
 TIM2.TIM_MasterOutputTrigger=TIM_TRGO_ENABLE
 TIM2.TIM_MasterSlaveMode=TIM_MASTERSLAVEMODE_ENABLE
 USB_DEVICE.IPParameters=VirtualMode,VirtualModeFS,USBD_HandleTypeDef,USBD_SUPPORT_USER_STRING
-=======
-TIM2.IPParameters=Period,Channel-PWM Generation2 CH2,Prescaler,Slave_TriggerPolarity,OCMode_PWM-PWM Generation2 CH2,OCFastMode_PWM-PWM Generation2 CH2,OCPolarity_2,Pulse-PWM Generation2 CH2,ClockDivision,Channel-PWM Generation3 CH3
-TIM2.OCFastMode_PWM-PWM\ Generation2\ CH2=TIM_OCFAST_DISABLE
-TIM2.OCMode_PWM-PWM\ Generation2\ CH2=TIM_OCMODE_PWM1
-TIM2.OCPolarity_2=TIM_OCPOLARITY_LOW
-TIM2.Period=48*6
-TIM2.Prescaler=0
-TIM2.Pulse-PWM\ Generation2\ CH2=48*4
-TIM2.Slave_TriggerPolarity=TIM_TRIGGERPOLARITY_NONINVERTED
-USB_DEVICE.IPParameters=VirtualMode,VirtualModeFS,USBD_HandleTypeDef
->>>>>>> parent of 4b2ee23... upd
 USB_DEVICE.USBD_HandleTypeDef=hUsbDeviceFS
 USB_DEVICE.USBD_SUPPORT_USER_STRING=0
 USB_DEVICE.VirtualMode=Cdc
 USB_DEVICE.VirtualModeFS=Cdc_FS
-<<<<<<< HEAD
 VP_TIM1_VS_ClockSourceINT.Mode=Internal
 VP_TIM1_VS_ClockSourceINT.Signal=TIM1_VS_ClockSourceINT
 VP_TIM1_VS_ClockSourceITR.Mode=TriggerSource_ITR1
@@ -238,8 +169,6 @@ VP_TIM1_VS_ControllerModeTrigger.Mode=Trigger Mode
 VP_TIM1_VS_ControllerModeTrigger.Signal=TIM1_VS_ControllerModeTrigger
 VP_TIM1_VS_OPM.Mode=OPM_bit
 VP_TIM1_VS_OPM.Signal=TIM1_VS_OPM
-=======
->>>>>>> parent of 4b2ee23... upd
 VP_TIM2_VS_ClockSourceINT.Mode=Internal
 VP_TIM2_VS_ClockSourceINT.Signal=TIM2_VS_ClockSourceINT
 VP_TIM2_VS_ControllerModeTrigger.Mode=Trigger Mode

@@ -40,11 +40,7 @@
 ### ADS-LD Output File: 'scintillator2 Configuration\scintillator2 Configuration.axf'
 ### ADS-LD Command File: 'scintillator2 Configuration\scintillator2 Configuration.lnp'
 ### Checking for dirty Components...
-<<<<<<< HEAD
-### Creating CmdFile 'scintillator2 Configuration\scintillator2 Configuration.lnp', Handle=0x00001130
-=======
-### Creating CmdFile 'scintillator2 Configuration\scintillator2 Configuration.lnp', Handle=0x00000424
->>>>>>> parent of 4b2ee23... upd
+### Creating CmdFile 'scintillator2 Configuration\scintillator2 Configuration.lnp', Handle=0x000003BC
 ### Writing '.lnp' file
 ### ADS-LD Command file 'scintillator2 Configuration\scintillator2 Configuration.lnp' is ready.
 ### ADS-LD: About to start ADS-LD Thread.
