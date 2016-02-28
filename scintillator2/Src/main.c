@@ -94,13 +94,6 @@ void USB_sprintf( char* s, uint32_t dig){
 			sprintf(buf,s,dig);
 			CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
 };
-
-void USB_ssprintf( char* s){
-			char buf[10];
-		memset(buf,0,10);
-			strcpy(buf,s);
-			CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
-};
 /* USER CODE END 0 */
 
 int main(void)
@@ -143,8 +136,9 @@ int main(void)
 		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
 		
 		USB_sprintf("<%X>[",total);
-		for(int i = 0; i < 4096; i++) USB_sprintf("%X,",spectr[i]);
-		USB_ssprintf("]\n");
+		for(int i = 0; i < 4095; i++) USB_sprintf("%X,",spectr[i]);
+		USB_sprintf("%X]\n",spectr[4095]);
+
 	
   /* USER CODE END WHILE */
 
