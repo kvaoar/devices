@@ -89,10 +89,10 @@ void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* AdcHandle)
 }
 
 void USB_sprintf( char* s, uint32_t dig){
-			char buf[10];
+		char buf[10];
 		memset(buf,0,10);
-			sprintf(buf,s,dig);
-			CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
+		sprintf(buf,s,dig);
+		CDC_Transmit_FS((uint8_t*)(buf), strlen(buf));
 };
 /* USER CODE END 0 */
 
@@ -123,9 +123,9 @@ int main(void)
 	HAL_ADCEx_Calibration_Start(&hadc1);
 	total = 0;
 
-	HAL_TIM_OnePulse_Start(&htim2,TIM_CHANNEL_2);
-	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_1);
-	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_2);
+	HAL_TIM_OnePulse_Start(&htim2,TIM_CHANNEL_2); //ext IT to reset integrator after adc
+	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_1); //pulse to LATCH comparator
+	HAL_TIM_OnePulse_Start(&htim1,TIM_CHANNEL_2); //pulse to event start ADC
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
   /* USER CODE END 2 */
 
@@ -133,12 +133,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		for(int i = 0; i < 5; i++)	HAL_Delay(1000);
-		
+		total = 0;
+		for(int i = 0; i < 4096; i++) spectr[i] = 0;
+		HAL_ADC_Start_DMA(&hadc1,(uint32_t*)dma_arr,BufSize);
+		HAL_Delay(1000);
+		HAL_ADC_Stop_DMA(&hadc1);
+
 		USB_sprintf("<%X>[",total);
 		for(int i = 0; i < 4095; i++) USB_sprintf("%X,",spectr[i]);
 		USB_sprintf("%X]\n",spectr[4095]);
-
 	
   /* USER CODE END WHILE */
 
