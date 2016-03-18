@@ -64,16 +64,19 @@ static void MX_FSMC_Init(void);
 #define FSMC_LCD_COMMAND  (uint32_t*)0x60000000
 
 void FSMC_LCD_Write_Command(uint16_t command) {
-  HAL_SRAM_Write_16b(FSMC_LCD_INSTANCE, FSMC_LCD_COMMAND, &command, 1);
+  *(__IO uint16_t *)FSMC_LCD_COMMAND = command; 
+	//HAL_SRAM_Write_16b(FSMC_LCD_INSTANCE, FSMC_LCD_COMMAND, &command, 1);
 }
 
 void FSMC_LCD_Write_Data(uint16_t data) {
-  HAL_SRAM_Write_16b(FSMC_LCD_INSTANCE, FSMC_LCD_DATA, &data, 1);
+  *(__IO uint16_t *)FSMC_LCD_DATA = data; 
+	//HAL_SRAM_Write_16b(FSMC_LCD_INSTANCE, FSMC_LCD_DATA, &data, 1);
 }
 
 uint16_t FSMC_LCD_Read_Data(void) {
 	uint16_t data = 0;
-  HAL_SRAM_Read_16b(FSMC_LCD_INSTANCE, FSMC_LCD_DATA, &data, 1);
+	data = *(__IO uint16_t *)FSMC_LCD_DATA;
+  //HAL_SRAM_Read_16b(FSMC_LCD_INSTANCE, FSMC_LCD_DATA, &data, 1);
 	return data;
 }
 
