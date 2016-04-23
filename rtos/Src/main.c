@@ -38,6 +38,7 @@
 #include "string.h"
 #include "tft.h"
 static char buf[255];
+const int TSTWORD = 200;
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -73,7 +74,21 @@ void StartTaskTFT(void const * argument);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc){
+	
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+	static int day = 0;
+HAL_RTC_GetDate(hrtc, &sDate, FORMAT_BIN);
+HAL_RTC_GetTime(hrtc, &sTime, FORMAT_BIN);
+	if(day != sDate.Date){
+		day = sDate.Date;
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR2,sDate.Month);
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR3,sDate.Date);
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR4,sDate.Year);
+	}
 
+};
 /* USER CODE END 0 */
 
 int main(void)
@@ -193,7 +208,7 @@ void MX_RTC_Init(void)
 {
 
   RTC_TimeTypeDef sTime;
-  RTC_DateTypeDef DateToUpdate;
+  RTC_DateTypeDef sDate;
 
     /**Initialize RTC and set the Time and Date 
     */
@@ -202,18 +217,32 @@ void MX_RTC_Init(void)
   hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
   HAL_RTC_Init(&hrtc);
 
-  sTime.Hours = 0x1;
-  sTime.Minutes = 0x0;
-  sTime.Seconds = 0x0;
+if(HAL_RTCEx_BKUPRead(&hrtc,RTC_BKP_DR1) != TSTWORD){
+	HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR1, TSTWORD);
 
-  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+  sTime.Hours = 23;
+  sTime.Minutes = 59;
+  sTime.Seconds = 50;
 
-  DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
-  DateToUpdate.Month = RTC_MONTH_JANUARY;
-  DateToUpdate.Date = 0x1;
-  DateToUpdate.Year = 0x0;
+  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
 
-  HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD);
+  sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  sDate.Month = RTC_MONTH_APRIL;
+  sDate.Date = 23;
+  sDate.Year = 16;
+
+  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+	
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2,sDate.Month);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3,sDate.Date);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4,sDate.Year);
+} else {
+		sDate.Month = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR2);
+		sDate.Date = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3);
+		sDate.Year = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
+	  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+
+}
 
 }
 
@@ -342,7 +371,7 @@ static RTC_DateTypeDef	sDate;
 		sprintf(buf, "Date: %02d/%02d/%02d Time: %02d:%02d:%02d\r\n\0", sDate.Date, sDate.Month, 
 		sDate.Year, sTime.Hours, sTime.Minutes, sTime.Seconds);
 		HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),1000);
-    osDelay(1000);
+    osDelay(5000);
   }
   /* USER CODE END 5 */ 
 }
@@ -365,11 +394,13 @@ LCD_Clear(yellow);
 		HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
 		//memset(buf,0,255);
 		sprintf(buf, "Date: %02d/%02d/%02d", sDate.Date, sDate.Month, sDate.Year);
-LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
+		LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
 		//memset(buf,0,255);
-sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
-LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
-    osDelay(1000);
+		sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
+		LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
+		
+		
+    osDelay(100);
   }
   /* USER CODE END StartTaskTFT */
 }
