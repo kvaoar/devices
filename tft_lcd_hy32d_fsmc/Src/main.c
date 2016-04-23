@@ -32,14 +32,22 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
-#include <stdlib.h>
-#include <string.h> /* memset */
+#include "fatfs.h"
+#include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
+RTC_HandleTypeDef hrtc;
+
+SD_HandleTypeDef hsd;
+HAL_SD_CardInfoTypedef SDCardInfo;
+DMA_HandleTypeDef hdma_sdio;
+
+UART_HandleTypeDef huart1;
+
 SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
@@ -50,7 +58,11 @@ SRAM_HandleTypeDef hsram1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_FSMC_Init(void);
+static void MX_SDIO_SD_Init(void);
+static void MX_USART1_UART_Init(void);
+static void MX_RTC_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -58,6 +70,10 @@ static void MX_FSMC_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+const int TSTWORD = 201;
+static RTC_TimeTypeDef sTime;
+static RTC_DateTypeDef		sDate;
+
 // FSMC
 #define FSMC_LCD_INSTANCE &hsram1
 #define FSMC_LCD_DATA 		(uint32_t*)0x60020000
@@ -508,13 +524,38 @@ void LCD_Draw_Rectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2,
   LCD_Draw_Line(x2, y2, x2, y1, color);
   LCD_Draw_Line(x2, y1, x1, y1, color);
 }
+
+
+void HAL_RTCEx_RTCEventCallback(RTC_HandleTypeDef *hrtc){
+	static int day = 0;
+HAL_RTC_GetDate(hrtc, &sDate, FORMAT_BIN);
+HAL_RTC_GetTime(hrtc, &sTime, FORMAT_BIN);
+	if(day != sDate.Date){
+		day = sDate.Date;
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR2,sDate.Month);
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR3,sDate.Date);
+		HAL_RTCEx_BKUPWrite(hrtc, RTC_BKP_DR4,sDate.Year);
+	}
+
+};
+
+void HAL_RTCEx_RTCEventErrorCallback(RTC_HandleTypeDef *hrtc){
+
+while(1){};
+
+}
+
 /* USER CODE END 0 */
 
 int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+ FATFS fileSystem;
+ FIL testFile;
+  UINT testBytes;
+  FRESULT res;
+	char buf[100];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -527,14 +568,45 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_FSMC_Init();
+  MX_SDIO_SD_Init();
+  MX_USART1_UART_Init();
+  MX_FATFS_Init();
+  MX_USB_DEVICE_Init();
+  MX_RTC_Init();
 
   /* USER CODE BEGIN 2 */
+	
+
+HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_SET);
+HAL_Delay(100);
 
   SSD1289_Init();
 LCD_Clear(black);
-			
-			
+		
+
+//HAL_UART_Transmit(&huart1,"start\n",strlen("start\n"),1);
+//HAL_UART_Transmit(&huart1,"star1\n",strlen("star1\n"),1);
+//HAL_UART_Transmit(&huart1,"star2\n",strlen("star2\n"),1);
+
+	//MX_USB_DEVICE_Init();
+	//HAL_Delay(1000);
+	//HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);
+ 
+ f_mount(&fileSystem, SD_Path, 1);
+ 
+		
+		uint8_t path[13] = "testfile.txt";
+    path[12] = '\0';
+
+		
+		
+ 	LCD_Clear(yellow);
+  LCD_WriteString_5x7(20, 240 - 30, "Hello world.", red, yellow, 0, 1);
+	LCD_WriteString_5x7(20, 240 - 30 - 20, "STM32F103VET6", green, yellow, 0, 1);
+
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -544,23 +616,48 @@ LCD_Clear(black);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-	LCD_Clear(yellow);
+/*	LCD_Clear(yellow);*/
 
-		  
-
-  LCD_Draw_Rectangle(0, 0, 20, 20, red, 1);
-  LCD_Draw_Rectangle(10, 10, 40, 40, blue, 1);
-  LCD_Draw_Rectangle(20, 20, 60, 60, white, 1);
-
-  LCD_WriteString_5x7(20, 240 - 30, "Hello world.", red, yellow, 0, 1);
-		LCD_WriteString_5x7(20, 240 - 30 - 20, "STM32F103VET6", green, yellow, 0, 1);
+  //LCD_Draw_Rectangle(50, 160, 150, 175, red, 1);
+  //LCD_Draw_Rectangle(10, 10, 40, 40, blue, 1);
+  //LCD_Draw_Rectangle(20, 20, 60, 60, white, 1);
 		
-		for(int i = 1; i < 10; i++){
+		memset(buf,0,100);
+		sprintf(buf, "Date: %02d/%02d/%02d", sDate.Date, sDate.Month, sDate.Year);
+LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
+		memset(buf,0,100);
+sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
+LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
+//HAL_UART_Transmit(&huart1,(uint8_t*)&buf, strlen(buf), 10);
+		
+		
+	/*	if(sTime.Seconds %10 ==0){
+		     res = f_open(&testFile, (char*)path, FA_READ |FA_WRITE );
+		uint16_t tmp = f_size(&testFile);
+		res = f_lseek(&testFile, tmp);
+			
+		memset(buf,0,100);
+		sprintf(buf, "Date: %02d/%02d/%02d Time: %02d:%02d:%02d\r\n\0", sDate.Date, sDate.Month, sDate.Year, sTime.Hours, sTime.Minutes, sTime.Seconds);
+
+    res = f_write(&testFile, buf, strlen(buf), &testBytes);
+		f_sync(&testFile);
+    res = f_close(&testFile);
+*/
+	//MX_USB_DEVICE_Init();
+	/*HAL_Delay(1000);
+	HAL_GPIO_WritePin(GPIOB,GPIO_PIN_7,GPIO_PIN_RESET);*/
+
+		
+	//	}
+		
+		/*for(int i = 1; i < 10; i++){
 			char buf[255];
 			memset(buf,0,255);
 			sprintf(buf,"Tcvetkov Evgeniy %d",i);
 			LCD_WriteString_5x7(50, 240 - 30 - 20 - 20*i, buf, magneta, glass,0, 1);
-		}
+		}*/
+		
+
 /*
   LCD_WriteString_5x7(10, 240 - 30 - 20 - 20 - 20, "abcdefghijklmnopqrstuvwxyz",
       yellow, black, 0, 1);
@@ -573,7 +670,7 @@ LCD_Clear(black);
 	//	LCD_WriteString_5x7(10, 240 - 30 - 20 - 20 - 20 - 10 - 10 -10 - 10,
     //  "", blue, black, 1, 1);
 			//FSMC_LCD_Write_Command(0x0022); 
-		HAL_Delay(1000);
+		//HAL_Delay(1000);
 
   }
   /* USER CODE END 3 */
@@ -587,28 +684,124 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL6;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
   HAL_RCC_OscConfig(&RCC_OscInitStruct);
 
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_SYSCLK|RCC_CLOCKTYPE_PCLK1;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
+  HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2);
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USB;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL_DIV1_5;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
   HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
   /* SysTick_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(SysTick_IRQn, 2, 0);
+}
+
+/* RTC init function */
+void MX_RTC_Init(void)
+{
+
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef DateToUpdate;
+
+    /**Initialize RTC and set the Time and Date 
+    */
+  hrtc.Instance = RTC;
+  hrtc.Init.AsynchPrediv = RTC_AUTO_1_SECOND;
+  hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
+  HAL_RTC_Init(&hrtc);
+
+	
+if(HAL_RTCEx_BKUPRead(&hrtc,RTC_BKP_DR1) != TSTWORD){
+	HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR1, TSTWORD);
+
+  sTime.Hours = 22;
+  sTime.Minutes = 02;
+  sTime.Seconds = 00;
+
+  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+
+  DateToUpdate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  DateToUpdate.Month = RTC_MONTH_APRIL;
+  DateToUpdate.Date = 23;
+  DateToUpdate.Year = 16;
+
+  HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BIN);
+	
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2,sDate.Month);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3,sDate.Date);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4,sDate.Year);
+} else {
+		sDate.Month = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR2);
+		sDate.Date = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3);
+		sDate.Year = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
+
+}
+
+}
+
+/* SDIO init function */
+void MX_SDIO_SD_Init(void)
+{
+
+  hsd.Instance = SDIO;
+  hsd.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
+  hsd.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
+  hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
+  hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
+  hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+  hsd.Init.ClockDiv = 4;
+
+}
+
+/* USART1 init function */
+void MX_USART1_UART_Init(void)
+{
+
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  HAL_UART_Init(&huart1);
+
+}
+
+/** 
+  * Enable DMA controller clock
+  */
+void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Channel4_5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Channel4_5_IRQn, 1, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Channel4_5_IRQn);
+
 }
 
 /** Configure pins as 
@@ -624,14 +817,19 @@ void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
-  __GPIOE_CLK_ENABLE();
-  __GPIOD_CLK_ENABLE();
-  __GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
-  /*Configure GPIO pin : PB5 */
-  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5|GPIO_PIN_7, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PB5 PB7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
@@ -660,12 +858,12 @@ void MX_FSMC_Init(void)
   hsram1.Init.AsynchronousWait = FSMC_ASYNCHRONOUS_WAIT_DISABLE;
   hsram1.Init.WriteBurst = FSMC_WRITE_BURST_DISABLE;
   /* Timing */
-  Timing.AddressSetupTime = 0x2;//15
-  Timing.AddressHoldTime = 0x00;//15
-  Timing.DataSetupTime = 0x05;//255
-  Timing.BusTurnAroundDuration = 0x00;//15
-  Timing.CLKDivision = 0x00;//16
-  Timing.DataLatency = 0x00;//17
+  Timing.AddressSetupTime = 15;
+  Timing.AddressHoldTime = 15;
+  Timing.DataSetupTime = 255;
+  Timing.BusTurnAroundDuration = 15;
+  Timing.CLKDivision = 16;
+  Timing.DataLatency = 17;
   Timing.AccessMode = FSMC_ACCESS_MODE_A;
   /* ExtTiming */
 

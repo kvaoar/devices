@@ -4,7 +4,7 @@
  *      *** Do not modify ! ***
  *
  * Project: 'tft_lcd_hy32d_fsmc' 
- * Target:  'tft_lcd_hy32d_fsmc Configuration' 
+ * Target:  'tft_lcd_hy32d_fsmc' 
  */
 
 #ifndef RTE_COMPONENTS_H
