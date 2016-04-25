@@ -33,12 +33,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 
 /* USER CODE BEGIN Includes */
 #include "string.h"
 #include "tft.h"
-static char buf[255];
-const int TSTWORD = 200;
+
+const int TSTWORD = 201;
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -52,6 +53,8 @@ UART_HandleTypeDef huart1;
 SRAM_HandleTypeDef hsram1;
 osThreadId defaultTaskHandle;
 osThreadId TaskTFTHandle;
+osThreadId TaskFATFSHandle;
+osMutexId myMutexFATFSHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -67,6 +70,7 @@ static void MX_SDIO_SD_Init(void);
 static void MX_FSMC_Init(void);
 void StartDefaultTask(void const * argument);
 void StartTaskTFT(void const * argument);
+void StartTaskFATFS(void const * argument);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -89,6 +93,39 @@ HAL_RTC_GetTime(hrtc, &sTime, FORMAT_BIN);
 	}
 
 };
+
+void MX_RTC_BACKUP_Init(void){
+	
+  RTC_TimeTypeDef sTime;
+  RTC_DateTypeDef sDate;
+	
+	if(HAL_RTCEx_BKUPRead(&hrtc,RTC_BKP_DR1) != TSTWORD){
+	HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR1, TSTWORD);
+
+  sTime.Hours = 22;
+  sTime.Minutes = 02;
+  sTime.Seconds = 00;
+
+  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+
+	sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  sDate.Month = RTC_MONTH_APRIL;
+  sDate.Date = 23;
+  sDate.Year = 16;
+
+  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+	
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2,sDate.Month);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3,sDate.Date);
+		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4,sDate.Year);
+} else {
+		sDate.Month = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR2);
+		sDate.Date = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3);
+		sDate.Year = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
+  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+}
+}
+
 /* USER CODE END 0 */
 
 int main(void)
@@ -117,6 +154,11 @@ int main(void)
 
   /* USER CODE END 2 */
 
+  /* Create the mutex(es) */
+  /* definition and creation of myMutexFATFS */
+  osMutexDef(myMutexFATFS);
+  myMutexFATFSHandle = osMutexCreate(osMutex(myMutexFATFS));
+
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
@@ -131,12 +173,16 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 128);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 32);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of TaskTFT */
-  osThreadDef(TaskTFT, StartTaskTFT, osPriorityAboveNormal, 0, 128);
+  osThreadDef(TaskTFT, StartTaskTFT, osPriorityAboveNormal, 0, 64);
   TaskTFTHandle = osThreadCreate(osThread(TaskTFT), NULL);
+
+  /* definition and creation of TaskFATFS */
+  osThreadDef(TaskFATFS, StartTaskFATFS, osPriorityIdle, 0, 256);
+  TaskFATFSHandle = osThreadCreate(osThread(TaskFATFS), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -174,10 +220,10 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
   RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE|RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
@@ -192,7 +238,7 @@ void SystemClock_Config(void)
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
 
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
@@ -208,7 +254,7 @@ void MX_RTC_Init(void)
 {
 
   RTC_TimeTypeDef sTime;
-  RTC_DateTypeDef sDate;
+  RTC_DateTypeDef DateToUpdate;
 
     /**Initialize RTC and set the Time and Date 
     */
@@ -217,32 +263,18 @@ void MX_RTC_Init(void)
   hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
   HAL_RTC_Init(&hrtc);
 
-if(HAL_RTCEx_BKUPRead(&hrtc,RTC_BKP_DR1) != TSTWORD){
-	HAL_RTCEx_BKUPWrite(&hrtc,RTC_BKP_DR1, TSTWORD);
+  sTime.Hours = 0x1;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
 
-  sTime.Hours = 23;
-  sTime.Minutes = 59;
-  sTime.Seconds = 50;
+  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
 
-  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+  DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
+  DateToUpdate.Month = RTC_MONTH_JANUARY;
+  DateToUpdate.Date = 0x1;
+  DateToUpdate.Year = 0x0;
 
-  sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
-  sDate.Month = RTC_MONTH_APRIL;
-  sDate.Date = 23;
-  sDate.Year = 16;
-
-  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
-	
-		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR2,sDate.Month);
-		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR3,sDate.Date);
-		HAL_RTCEx_BKUPWrite(&hrtc, RTC_BKP_DR4,sDate.Year);
-} else {
-		sDate.Month = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR2);
-		sDate.Date = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR3);
-		sDate.Year = HAL_RTCEx_BKUPRead(&hrtc, RTC_BKP_DR4);
-	  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
-
-}
+  HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD);
 
 }
 
@@ -257,9 +289,6 @@ void MX_SDIO_SD_Init(void)
   hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
   hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
   hsd.Init.ClockDiv = 4;
-  HAL_SD_Init(&hsd, &SDCardInfo);
-
-  HAL_SD_WideBusOperation_Config(&hsd, SDIO_BUS_WIDE_4B);
 
 }
 
@@ -358,20 +387,28 @@ void MX_FSMC_Init(void)
 /* StartDefaultTask function */
 void StartDefaultTask(void const * argument)
 {
+  /* init code for FATFS */
+  MX_FATFS_Init();
 
   /* USER CODE BEGIN 5 */
-static RTC_TimeTypeDef	sTime;
-static RTC_DateTypeDef	sDate;
+uint8_t sec = 0;
+RTC_TimeTypeDef	sTime;
+RTC_DateTypeDef	sDate;
+char buf[50];
   /* Infinite loop */
   for(;;)
   {	
 		HAL_RTC_GetDate(&hrtc, &sDate, FORMAT_BIN);
 		HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
 		//memset(buf,0,255);
+		if(sec != sTime.Seconds){
+			sec = sTime.Seconds;
+		memset(buf,0,50);
 		sprintf(buf, "Date: %02d/%02d/%02d Time: %02d:%02d:%02d\r\n\0", sDate.Date, sDate.Month, 
 		sDate.Year, sTime.Hours, sTime.Minutes, sTime.Seconds);
-		HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),1000);
-    osDelay(5000);
+		HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+		}
+    osDelay(500);
   }
   /* USER CODE END 5 */ 
 }
@@ -380,29 +417,60 @@ static RTC_DateTypeDef	sDate;
 void StartTaskTFT(void const * argument)
 {
   /* USER CODE BEGIN StartTaskTFT */
-static RTC_TimeTypeDef	sTime;
-static RTC_DateTypeDef	sDate;
+RTC_TimeTypeDef	sTime;
+RTC_DateTypeDef	sDate;
+char buf[100];
 SSD1289_Init();
 LCD_Clear(yellow);
-	
+	memset(buf,0,100);
   LCD_WriteString_5x7(20, 240 - 30, "Hello world.", red, yellow, 0, 1);
 	LCD_WriteString_5x7(20, 240 - 30 - 20, "STM32F103VET6", green, yellow, 0, 1);
   /* Infinite loop */
   for(;;)
   {
+		
 		HAL_RTC_GetDate(&hrtc, &sDate, FORMAT_BIN);
 		HAL_RTC_GetTime(&hrtc, &sTime, FORMAT_BIN);
-		//memset(buf,0,255);
+		memset(buf,0,100);
 		sprintf(buf, "Date: %02d/%02d/%02d", sDate.Date, sDate.Month, sDate.Year);
 		LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
-		//memset(buf,0,255);
+		memset(buf,0,100);
 		sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
 		LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
 		
 		
-    osDelay(100);
+    osDelay(500);
   }
   /* USER CODE END StartTaskTFT */
+}
+
+/* StartTaskFATFS function */
+void StartTaskFATFS(void const * argument)
+{
+  /* USER CODE BEGIN StartTaskFATFS */
+  /* Infinite loop */
+	UINT count = 0;
+uint32_t i = 1;
+static	FATFS fileSystem;
+static	FIL testFile;
+	char buf[100];
+	sprintf(SD_Path,"0:/\0");
+	f_mount(&fileSystem, SD_Path, 1);
+  f_open(&testFile, "testfile.txt", FA_OPEN_ALWAYS | FA_READ |FA_WRITE );
+	uint16_t tmp = f_size(&testFile);
+	f_lseek(&testFile, tmp);
+			
+	for(;;)
+  {
+		if(i > 100000) vTaskDelete(TaskFATFSHandle);
+		memset(buf,0,100);
+		sprintf(buf, "%lu\r\n", i++);
+    f_write(&testFile, buf, strlen(buf), &count);
+		f_sync(&testFile);
+    //f_close(&testFile);
+    osDelay(100);
+  }
+  /* USER CODE END StartTaskFATFS */
 }
 
 #ifdef USE_FULL_ASSERT

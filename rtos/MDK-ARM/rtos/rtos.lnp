@@ -14,6 +14,8 @@
 "rtos\stm32f1xx_hal_timebase_tim.o"
 "rtos\main.o"
 "rtos\tft.o"
+"rtos\bsp_driver_sd.o"
+"rtos\fatfs.o"
 "rtos\startup_stm32f103xe.o"
 "rtos\system_stm32f1xx.o"
 "rtos\stm32f1xx_hal_tim_ex.o"
@@ -34,6 +36,11 @@
 "rtos\stm32f1xx_hal_rtc.o"
 "rtos\stm32f1xx_ll_fsmc.o"
 "rtos\stm32f1xx_hal_sram.o"
+"rtos\ff.o"
+"rtos\diskio.o"
+"rtos\syscall.o"
+"rtos\sd_diskio.o"
+"rtos\ff_gen_drv.o"
 --library_type=microlib --strict --scatter "rtos\rtos.sct"
 
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols

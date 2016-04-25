@@ -35,7 +35,7 @@ void SSD1289_Init(void);
 #define blue      0xF800
 #define white     0xFFFF
 #define black     0x3185
-#define glass      0x0000
+#define glass     0x0000
 
 void LCD_SetCursor(uint16_t x, uint16_t y);
 void LCD_Clear(uint16_t color);

@@ -22,7 +22,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "TouchPanel.h"
-
+#include "stm32f1xx_hal.h"
 
 /* Private variables ---------------------------------------------------------*/
 Matrix matrix ;
@@ -33,7 +33,7 @@ Coordinate ScreenSample[3];
 /* LCD Coordinate */
 Coordinate DisplaySample[3] =   {
                                             { 45, 45 },
-											{ 45, 270},
+																						{ 45, 270},
                                             { 190,190}
 	                            } ;
 
