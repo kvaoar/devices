@@ -87,37 +87,37 @@ ARM Macro Assembler    Page 2
    47 00000000         ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
    48 00000000         ; </h>
    49 00000000         
-   50 00000000 00001000 
+   50 00000000 00000400 
                        Stack_Size
-                               EQU              0x1000
+                               EQU              0x400
    51 00000000         
    52 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
 =3
    53 00000000         Stack_Mem
                                SPACE            Stack_Size
-   54 00001000         __initial_sp
-   55 00001000         
-   56 00001000         ; <h> Heap Configuration
-   57 00001000         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-   58 00001000         ; </h>
-   59 00001000         
-   60 00001000 00000800 
+   54 00000400         __initial_sp
+   55 00000400         
+   56 00000400         ; <h> Heap Configuration
+   57 00000400         ;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   58 00000400         ; </h>
+   59 00000400         
+   60 00000400 00000400 
                        Heap_Size
-                               EQU              0x800
-   61 00001000         
-   62 00001000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+                               EQU              0x400
+   61 00000400         
+   62 00000400                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
 3
    63 00000000         __heap_base
    64 00000000         Heap_Mem
                                SPACE            Heap_Size
-   65 00000800         __heap_limit
-   66 00000800         
-   67 00000800                 PRESERVE8
-   68 00000800                 THUMB
-   69 00000800         
-   70 00000800         
-   71 00000800         ; Vector Table Mapped to Address 0 at Reset
-   72 00000800                 AREA             RESET, DATA, READONLY
+   65 00000400         __heap_limit
+   66 00000400         
+   67 00000400                 PRESERVE8
+   68 00000400                 THUMB
+   69 00000400         
+   70 00000400         
+   71 00000400         ; Vector Table Mapped to Address 0 at Reset
+   72 00000400                 AREA             RESET, DATA, READONLY
    73 00000000                 EXPORT           __Vectors
    74 00000000                 EXPORT           __Vectors_End
    75 00000000                 EXPORT           __Vectors_Size
@@ -282,9 +282,9 @@ ARM Macro Assembler    Page 5
 ]
   164 00000000                 IMPORT           __main
   165 00000000                 IMPORT           SystemInit
-  166 00000000 4806            LDR              R0, =SystemInit
+  166 00000000 4809            LDR              R0, =SystemInit
   167 00000002 4780            BLX              R0
-  168 00000004 4806            LDR              R0, =__main
+  168 00000004 4809            LDR              R0, =__main
   169 00000006 4700            BX               R0
   170 00000008                 ENDP
   171 00000008         
@@ -566,22 +566,40 @@ ARM Macro Assembler    Page 9
   347 0000001C         ;*******************************************************
                        ************************
   348 0000001C                 IF               :DEF:__MICROLIB
-  349 0000001C         
-  350 0000001C                 EXPORT           __initial_sp
-  351 0000001C                 EXPORT           __heap_base
-  352 0000001C                 EXPORT           __heap_limit
-  353 0000001C         
-  354 0000001C                 ELSE
-  369                          ENDIF
-  370 0000001C         
-  371 0000001C                 END
+  355 0000001C         
+  356 0000001C                 IMPORT           __use_two_region_memory
+  357 0000001C                 EXPORT           __user_initial_stackheap
+  358 0000001C         
+  359 0000001C         __user_initial_stackheap
+  360 0000001C         
+  361 0000001C 4804            LDR              R0, =  Heap_Mem
+  362 0000001E 4905            LDR              R1, =(Stack_Mem + Stack_Size)
+  363 00000020 4A05            LDR              R2, = (Heap_Mem +  Heap_Size)
+  364 00000022 4B06            LDR              R3, = Stack_Mem
+  365 00000024 4770            BX               LR
+  366 00000026         
+  367 00000026 00 00           ALIGN
+  368 00000028         
+  369 00000028                 ENDIF
+  370 00000028         
+  371 00000028                 END
+
+
+
+ARM Macro Assembler    Page 10 
+
+
               00000000 
+              00000000 
+              00000000 
+              00000400 
+              00000400 
               00000000 
 Command Line: --debug --xref --cpu=Cortex-M3 --apcs=interwork --depend=rtos\sta
 rtup_stm32f103xe.d -ortos\startup_stm32f103xe.o -I..\Inc -ID:\git\devices\rtos\
 MDK-ARM\RTE -ID:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include -ID:\Keil5\ARM\PA
-CK\Keil\STM32F1xx_DFP\2.0.0 --predefine="__MICROLIB SETA 1" --list=startup_stm3
-2f103xe.lst startup_stm32f103xe.s
+CK\Keil\STM32F1xx_DFP\2.0.0 --list=startup_stm32f103xe.lst startup_stm32f103xe.
+s
 
 
 
@@ -602,17 +620,17 @@ Symbol: Stack_Mem
    Definitions
       At line 53 in file startup_stm32f103xe.s
    Uses
-      None
-Comment: Stack_Mem unused
-__initial_sp 00001000
+      At line 362 in file startup_stm32f103xe.s
+      At line 364 in file startup_stm32f103xe.s
+
+__initial_sp 00000400
 
 Symbol: __initial_sp
    Definitions
       At line 54 in file startup_stm32f103xe.s
    Uses
       At line 77 in file startup_stm32f103xe.s
-      At line 350 in file startup_stm32f103xe.s
-
+Comment: __initial_sp used once
 3 symbols
 
 
@@ -634,24 +652,25 @@ Symbol: Heap_Mem
    Definitions
       At line 64 in file startup_stm32f103xe.s
    Uses
-      None
-Comment: Heap_Mem unused
+      At line 361 in file startup_stm32f103xe.s
+      At line 363 in file startup_stm32f103xe.s
+
 __heap_base 00000000
 
 Symbol: __heap_base
    Definitions
       At line 63 in file startup_stm32f103xe.s
    Uses
-      At line 351 in file startup_stm32f103xe.s
-Comment: __heap_base used once
-__heap_limit 00000800
+      None
+Comment: __heap_base unused
+__heap_limit 00000400
 
 Symbol: __heap_limit
    Definitions
       At line 65 in file startup_stm32f103xe.s
    Uses
-      At line 352 in file startup_stm32f103xe.s
-Comment: __heap_limit used once
+      None
+Comment: __heap_limit unused
 4 symbols
 
 
@@ -1398,29 +1417,45 @@ Symbol: WWDG_IRQHandler
       At line 95 in file startup_stm32f103xe.s
       At line 218 in file startup_stm32f103xe.s
 
-72 symbols
+__user_initial_stackheap 0000001C
+
+Symbol: __user_initial_stackheap
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 359 in file startup_stm32f103xe.s
+   Uses
+      At line 357 in file startup_stm32f103xe.s
+Comment: __user_initial_stackheap used once
+73 symbols
 
 
 
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Absolute symbols
 
-Heap_Size 00000800
+Heap_Size 00000400
 
 Symbol: Heap_Size
    Definitions
       At line 60 in file startup_stm32f103xe.s
    Uses
       At line 64 in file startup_stm32f103xe.s
-Comment: Heap_Size used once
-Stack_Size 00001000
+      At line 363 in file startup_stm32f103xe.s
+
+Stack_Size 00000400
 
 Symbol: Stack_Size
    Definitions
       At line 50 in file startup_stm32f103xe.s
    Uses
       At line 53 in file startup_stm32f103xe.s
-Comment: Stack_Size used once
+      At line 362 in file startup_stm32f103xe.s
+
 __Vectors_Size 00000130
 
 Symbol: __Vectors_Size
@@ -1452,5 +1487,13 @@ Symbol: __main
    Uses
       At line 168 in file startup_stm32f103xe.s
 Comment: __main used once
-2 symbols
-420 symbols in table
+__use_two_region_memory 00000000
+
+Symbol: __use_two_region_memory
+   Definitions
+      At line 356 in file startup_stm32f103xe.s
+   Uses
+      None
+Comment: __use_two_region_memory unused
+3 symbols
+423 symbols in table

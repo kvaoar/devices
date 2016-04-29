@@ -1,6 +1,7 @@
 #include "stm32f1xx_hal.h"
 #include "tft.h"
 
+
 void FSMC_LCD_Write_Command(uint16_t command) {
   *(__IO uint16_t *)FSMC_LCD_COMMAND = command; 
 	//HAL_SRAM_Write_16b(FSMC_LCD_INSTANCE, FSMC_LCD_COMMAND, &command, 1);

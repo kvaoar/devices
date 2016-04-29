@@ -49,16 +49,14 @@ SD_HandleTypeDef hsd;
 HAL_SD_CardInfoTypedef SDCardInfo;
 
 UART_HandleTypeDef huart1;
-
 SRAM_HandleTypeDef hsram1;
 osThreadId defaultTaskHandle;
 osThreadId TaskTFTHandle;
 osThreadId TaskFATFSHandle;
-osMutexId myMutexFATFSHandle;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+static char gbuf[50];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -151,13 +149,8 @@ int main(void)
   MX_FSMC_Init();
 
   /* USER CODE BEGIN 2 */
-
+	
   /* USER CODE END 2 */
-
-  /* Create the mutex(es) */
-  /* definition and creation of myMutexFATFS */
-  osMutexDef(myMutexFATFS);
-  myMutexFATFSHandle = osMutexCreate(osMutex(myMutexFATFS));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -173,15 +166,15 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of defaultTask */
-  osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 32);
+  osThreadDef(defaultTask, StartDefaultTask, osPriorityIdle, 0, 128);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of TaskTFT */
-  osThreadDef(TaskTFT, StartTaskTFT, osPriorityAboveNormal, 0, 64);
+  osThreadDef(TaskTFT, StartTaskTFT, osPriorityHigh, 0, 256);
   TaskTFTHandle = osThreadCreate(osThread(TaskTFT), NULL);
 
   /* definition and creation of TaskFATFS */
-  osThreadDef(TaskFATFS, StartTaskFATFS, osPriorityIdle, 0, 256);
+  osThreadDef(TaskFATFS, StartTaskFATFS, osPriorityNormal, 0, 1024);
   TaskFATFSHandle = osThreadCreate(osThread(TaskFATFS), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -263,7 +256,18 @@ void MX_RTC_Init(void)
   hrtc.Init.OutPut = RTC_OUTPUTSOURCE_NONE;
   HAL_RTC_Init(&hrtc);
 
-MX_RTC_BACKUP_Init();
+  sTime.Hours = 0x1;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
+
+  HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD);
+
+  DateToUpdate.WeekDay = RTC_WEEKDAY_MONDAY;
+  DateToUpdate.Month = RTC_MONTH_JANUARY;
+  DateToUpdate.Date = 0x1;
+  DateToUpdate.Year = 0x0;
+
+  HAL_RTC_SetDate(&hrtc, &DateToUpdate, RTC_FORMAT_BCD);
 
 }
 
@@ -384,6 +388,8 @@ uint8_t sec = 0;
 RTC_TimeTypeDef	sTime;
 RTC_DateTypeDef	sDate;
 char buf[50];
+	sprintf(buf, "idle run\r\n");
+			HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
   /* Infinite loop */
   for(;;)
   {	
@@ -397,7 +403,7 @@ char buf[50];
 		sDate.Year, sTime.Hours, sTime.Minutes, sTime.Seconds);
 		HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
 		}
-    osDelay(500);
+    osDelay(1000);
   }
   /* USER CODE END 5 */ 
 }
@@ -409,6 +415,9 @@ void StartTaskTFT(void const * argument)
 RTC_TimeTypeDef	sTime;
 RTC_DateTypeDef	sDate;
 char buf[100];
+	
+	sprintf(buf, "tft run\r\n");
+			HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
 SSD1289_Init();
 LCD_Clear(yellow);
 	memset(buf,0,100);
@@ -426,7 +435,7 @@ LCD_Clear(yellow);
 		memset(buf,0,100);
 		sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
 		LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
-		
+		LCD_WriteString_5x7(50, 50, gbuf, green, yellow,0, 2);
 		
     osDelay(500);
   }
@@ -442,22 +451,61 @@ void StartTaskFATFS(void const * argument)
 uint32_t i = 1;
 static	FATFS fileSystem;
 static	FIL testFile;
+	FRESULT res = FR_OK;
 	char buf[100];
-	sprintf(SD_Path,"0:/\0");
-	f_mount(&fileSystem, SD_Path, 1);
-  f_open(&testFile, "testfile.txt", FA_OPEN_ALWAYS | FA_READ |FA_WRITE );
-	uint16_t tmp = f_size(&testFile);
+	sprintf(gbuf, "fat run");
+			//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+	
+	do{
+	osDelay(1000);
+//	sprintf(SD_Path,"0:/\0");
+	res = f_mount(&fileSystem, SD_Path, 1);
+		sprintf(gbuf, "fat mnt %i",res);
+		
+    osDelay(1000);
+	//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+
+	/*if(res == FR_NO_FILESYSTEM){ 
+		res = f_mkfs("", 0, 0);
+		sprintf(gbuf, "fat mkfs %i",res);
+		
+    osDelay(1000);
+		//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+		
+		res = f_mount(&fileSystem, SD_Path, 1);
+		sprintf(gbuf, "fat mnt %i",res);
+		
+    osDelay(1000);
+	//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+	
+}*/
+	}while (res!= FR_OK);
+	
+			HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+  res = f_open(&testFile, "testfile.txt", FA_OPEN_ALWAYS | FA_READ |FA_WRITE );
+			sprintf(gbuf, "fat open %i",res);
+	
+    osDelay(1000);
+			//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+	/*uint16_t tmp = f_size(&testFile);
 	f_lseek(&testFile, tmp);
-			
+			*/
 	for(;;)
   {
-		if(i > 100000) vTaskDelete(TaskFATFSHandle);
+		//if(i > 100000) vTaskDelete(TaskFATFSHandle);
+		if(i%100 == 0){
+			sprintf(&gbuf[9], "fat wr %i", i);
+			
+    osDelay(1000);
+			//HAL_UART_Transmit(&huart1,(uint8_t*)buf,strlen(buf),100);
+		}
 		memset(buf,0,100);
 		sprintf(buf, "%lu\r\n", i++);
-    f_write(&testFile, buf, strlen(buf), &count);
+    res = f_write(&testFile, buf, strlen(buf), &count);
+		if( res != FR_OK) break;
 		f_sync(&testFile);
     //f_close(&testFile);
-    osDelay(100);
+    osDelay(10);
   }
   /* USER CODE END StartTaskFATFS */
 }
