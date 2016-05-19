@@ -39,7 +39,7 @@
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart1;
+IRDA_HandleTypeDef hirda1;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
@@ -51,7 +51,7 @@ DMA_HandleTypeDef hdma_usart1_rx;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_USART1_UART_Init(void);
+static void MX_USART1_IRDA_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -65,11 +65,11 @@ uint8_t uart_rx_buf[255];
 void HAL_SYSTICK_Callback(void){
 static uint16_t prev = 0;
 	uint32_t time = HAL_GetTick();
-	uint16_t position = (0xFF - huart1.hdmarx->Instance->CNDTR );
+	uint16_t position = (0xFF - hirda1.hdmarx->Instance->CNDTR );
 	if((start == 1)&&(time%300 == 0)){
 	//__HAL_LOCK(huart);
-		if(!(huart1.Instance->SR&USART_SR_RXNE)){
-		HAL_UART_DMAPause(&huart1);
+		if(!(hirda1.Instance->SR&USART_SR_RXNE)){
+		HAL_IRDA_DMAPause(&hirda1);
 		
 			if(prev < position){
 				CDC_Transmit_FS(&uart_rx_buf[prev], position - prev);
@@ -82,7 +82,7 @@ static uint16_t prev = 0;
 				CDC_Transmit_FS("endl\n", 5);
 			}
 		
-		HAL_UART_DMAResume(&huart1);
+		HAL_IRDA_DMAResume(&hirda1);
 		}
 	}
 	//__HAL_UNLOCK(huart);
@@ -108,13 +108,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_USART1_UART_Init();
+  MX_USART1_IRDA_Init();
   MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
 		HAL_Delay(100);
 
-HAL_UART_Receive_DMA(&huart1,uart_rx_buf,255);
+HAL_IRDA_Receive_DMA(&hirda1,uart_rx_buf,255);
 	start = 1;
   /* USER CODE END 2 */
 
@@ -169,18 +169,17 @@ void SystemClock_Config(void)
 }
 
 /* USART1 init function */
-void MX_USART1_UART_Init(void)
+void MX_USART1_IRDA_Init(void)
 {
 
-  huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  HAL_UART_Init(&huart1);
+  hirda1.Instance = USART1;
+  hirda1.Init.BaudRate = 9600;
+  hirda1.Init.WordLength = IRDA_WORDLENGTH_8B;
+  hirda1.Init.Parity = IRDA_PARITY_NONE;
+  hirda1.Init.Mode = IRDA_MODE_TX_RX;
+  hirda1.Init.Prescaler = 1;
+  hirda1.Init.IrDAMode = IRDA_POWERMODE_NORMAL;
+  HAL_IRDA_Init(&hirda1);
 
 }
 
