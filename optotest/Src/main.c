@@ -125,7 +125,8 @@ HAL_IRDA_Receive_DMA(&hirda1,uart_rx_buf,255);
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-
+//HAL_IRDA_Transmit(&hirda1,"Heil World!\n", 12, 1000);
+//				HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 
@@ -173,7 +174,7 @@ void MX_USART1_IRDA_Init(void)
 {
 
   hirda1.Instance = USART1;
-  hirda1.Init.BaudRate = 9600;
+  hirda1.Init.BaudRate = 256000;
   hirda1.Init.WordLength = IRDA_WORDLENGTH_8B;
   hirda1.Init.Parity = IRDA_PARITY_NONE;
   hirda1.Init.Mode = IRDA_MODE_TX_RX;
