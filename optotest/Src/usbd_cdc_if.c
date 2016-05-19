@@ -91,7 +91,7 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 /* Handle for USB Full Speed IP */
   USBD_HandleTypeDef  *hUsbDevice_0;
 /* USER CODE BEGIN PRIVATE_VARIABLES */
-extern UART_HandleTypeDef huart1;
+extern IRDA_HandleTypeDef hirda1;
 /* USER CODE END PRIVATE_VARIABLES */
 
 /**
@@ -257,7 +257,7 @@ static int8_t CDC_Receive_FS (uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(hUsbDevice_0, &Buf[0]);
   USBD_CDC_ReceivePacket(hUsbDevice_0);
-	HAL_UART_Transmit(&huart1,Buf,*Len, 100);
+	HAL_IRDA_Transmit(&hirda1,Buf,*Len, 100);
 	//CDC_Transmit_FS(Buf, *Len);
   return (USBD_OK);
   /* USER CODE END 6 */ 

@@ -70,11 +70,11 @@ void HAL_MspInit(void)
   /* USER CODE END MspInit 1 */
 }
 
-void HAL_UART_MspInit(UART_HandleTypeDef* huart)
+void HAL_IRDA_MspInit(IRDA_HandleTypeDef* hirda)
 {
 
   GPIO_InitTypeDef GPIO_InitStruct;
-  if(huart->Instance==USART1)
+  if(hirda->Instance==USART1)
   {
   /* USER CODE BEGIN USART1_MspInit 0 */
 
@@ -108,7 +108,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     hdma_usart1_rx.Init.Priority = DMA_PRIORITY_LOW;
     HAL_DMA_Init(&hdma_usart1_rx);
 
-    __HAL_LINKDMA(huart,hdmarx,hdma_usart1_rx);
+    __HAL_LINKDMA(hirda,hdmarx,hdma_usart1_rx);
 
     /* Peripheral interrupt init */
     HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
@@ -120,10 +120,10 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 
 }
 
-void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
+void HAL_IRDA_MspDeInit(IRDA_HandleTypeDef* hirda)
 {
 
-  if(huart->Instance==USART1)
+  if(hirda->Instance==USART1)
   {
   /* USER CODE BEGIN USART1_MspDeInit 0 */
 
@@ -138,7 +138,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9|GPIO_PIN_10);
 
     /* Peripheral DMA DeInit*/
-    HAL_DMA_DeInit(huart->hdmarx);
+    HAL_DMA_DeInit(hirda->hdmarx);
 
     /* Peripheral interrupt DeInit*/
     HAL_NVIC_DisableIRQ(USART1_IRQn);
