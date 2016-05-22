@@ -1,0 +1,68 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\kvaoar\Desktop\artekit_space_invaders\stm32_vga.uvproj
+Project File Date:  05/22/2016
+
+<h2>Output:</h2>
+Build target 'stm32_64k'
+*** Error: Referred Memory Range 'IROM2' is undefined.
+compiling main.c...
+main.c(130): warning:  #223-D: function "rand" declared implicitly
+                while(p--)ran *=  rand();
+main.c(294): warning:  #111-D: statement is unreachable
+        return 0;
+main.c(166): warning:  #177-D: variable "rx" was declared but never referenced
+                u32 rx=0, ry=0, fx, fy, ff;
+main.c(166): warning:  #177-D: variable "ry" was declared but never referenced
+                u32 rx=0, ry=0, fx, fy, ff;
+main.c(166): warning:  #177-D: variable "fx" was declared but never referenced
+                u32 rx=0, ry=0, fx, fy, ff;
+main.c(166): warning:  #177-D: variable "fy" was declared but never referenced
+                u32 rx=0, ry=0, fx, fy, ff;
+main.c(166): warning:  #177-D: variable "ff" was declared but never referenced
+                u32 rx=0, ry=0, fx, fy, ff;
+main.c(33): warning:  #550-D: variable "test" was set but never used
+  static GDI_WINDOW test; 
+main.c: 8 warnings, 0 errors
+linking...
+Program Size: Code=9176 RO-data=1424 RW-data=60 ZI-data=12052  
+".\obj\stm32_vga.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\kvaoar\\Desktop\\artekit_space_invaders\\obj\\stm32_vga.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+</pre>
+</body>
+</html>
+ng stm32f10x_tim.c...
+compiling misc.c...
+compiling stm32f10x_dma.c...
+compiling stm32f10x_exti.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_spi.c...
+compiling stm32f10x_rcc.c...
+linking...
+Program Size: Code=9176 RO-data=1424 RW-data=60 ZI-data=12052  
+".\obj\stm32_vga.axf" - 0 Error(s), 8 Warning(s).
+Load "C:\\Users\\kvaoar\\Desktop\\artekit_space_invaders\\obj\\stm32_vga.axf" 
+Full Chip Erase Done.
+Programming Done.
+Verify OK.
+Application running ...
+;
+main.c(213): error:  #169: expected a declaration
+        if ((rx >= 400 )||(gdiTestPoint( rx, ry)==1 )) {
+main.c(241): warning:  #12-D: parsing restarts here after previous syntax error
+        return 0;
+main.c(242): error:  #169: expected a declaration
+  }
+main.c(33): warning:  #550-D: variable "test" was set but never used
+  static GDI_WINDOW test; 
+main.c: 10 warnings, 12 errors
+".\obj\stm32_vga.axf" - 12 Error(s), 10 Warning(s).
+Target not created
+d not load file 'C:\Users\kvaoar\Desktop\artekit_space_invaders\obj\stm32_vga.axf'

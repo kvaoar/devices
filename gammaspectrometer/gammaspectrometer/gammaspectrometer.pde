@@ -25,6 +25,7 @@ frameRate(60);
   myPort.bufferUntil('\n'); 
   
   
+  
 } 
 
 void rescale(int arr[], float lin_arr[]){
@@ -47,7 +48,7 @@ void draw() {
       //println(s);
       try{
         String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
-       // println(unhex(inString[1]));
+        println(unhex(inString[1]));
         partrate = unhex(inString[1]);
         parttotal += partrate;
 
@@ -101,6 +102,7 @@ text(str(parttotal)+"prt",width-100,40);
  
 void serialEvent(Serial p) { 
 s = p.readString();
+println("1");
 // String[] inString = match(trim(s),"<(.*?)>[(.*?)]");
 // for(int i = 0; i < inString.length; i++) println("tag "+inString[i]+";");
 /* String[] list = split(inString[1], ",");

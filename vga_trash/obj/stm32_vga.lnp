@@ -1,0 +1,25 @@
+--cpu Cortex-M3
+".\obj\main.o"
+".\obj\stm32f10x_it.o"
+".\obj\video.o"
+".\obj\gdi.o"
+".\obj\font5x7.o"
+".\obj\mth.o"
+".\obj\sys.o"
+".\obj\startup_stm32f10x_md.o"
+".\obj\demo.o"
+".\obj\space_invaders.o"
+".\obj\splogo.o"
+".\obj\core_cm3.o"
+".\obj\system_stm32f10x.o"
+".\obj\stm32f10x_tim.o"
+".\obj\misc.o"
+".\obj\stm32f10x_dma.o"
+".\obj\stm32f10x_exti.o"
+".\obj\stm32f10x_gpio.o"
+".\obj\stm32f10x_spi.o"
+".\obj\stm32f10x_rcc.o"
+--nodebug --strict --scatter ".\obj\stm32_vga.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\lst\stm32_vga.map" -o .\obj\stm32_vga.axf

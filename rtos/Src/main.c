@@ -103,6 +103,7 @@ void MX_RTC_BACKUP_Init(void){
   sTime.Hours = 22;
   sTime.Minutes = 02;
   sTime.Seconds = 00;
+		sTime.
 
   HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
 
