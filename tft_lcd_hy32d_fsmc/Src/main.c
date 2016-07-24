@@ -34,7 +34,7 @@
 #include "stm32f1xx_hal.h"
 #include "fatfs.h"
 #include "usb_device.h"
-
+#include "TouchPanel.h"
 /* USER CODE BEGIN Includes */
 #include "string.h"
 /* USER CODE END Includes */
@@ -49,6 +49,7 @@ DMA_HandleTypeDef hdma_sdio;
 UART_HandleTypeDef huart1;
 
 SRAM_HandleTypeDef hsram1;
+
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -585,7 +586,8 @@ HAL_Delay(100);
   SSD1289_Init();
 LCD_Clear(black);
 		
-
+TP_Init();	
+ TouchPanel_Calibrate(0);
 //HAL_UART_Transmit(&huart1,"start\n",strlen("start\n"),1);
 //HAL_UART_Transmit(&huart1,"star1\n",strlen("star1\n"),1);
 //HAL_UART_Transmit(&huart1,"star2\n",strlen("star2\n"),1);
@@ -629,8 +631,22 @@ LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
 sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
 LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
 //HAL_UART_Transmit(&huart1,(uint8_t*)&buf, strlen(buf), 10);
+
+		//Read_Ads7846();
+		//LCD_TouchRead(&display);
+		int x,y;
+		TP_GetAdXY(&x,&y); 
+				sprintf(buf, "x %d y %d", x,y);
+LCD_WriteString_5x7(50, 50, buf, magneta, yellow,0, 2);
 		
 		
+		if(Read_Ads7846() != 0){
+		getDisplayPoint(&display, Read_Ads7846(), &matrix ) ; // ???????? ?????
+ 					//	 TP_DrawPoint(display.x,display.y);	// ?????????? ?????
+
+		sprintf(buf, "xS %d yS %d", display.x,display.y);
+LCD_WriteString_5x7(50, 75, buf, magneta, yellow,0, 2);
+		}
 	/*	if(sTime.Seconds %10 ==0){
 		     res = f_open(&testFile, (char*)path, FA_READ |FA_WRITE );
 		uint16_t tmp = f_size(&testFile);

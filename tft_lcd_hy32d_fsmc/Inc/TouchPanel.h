@@ -27,6 +27,16 @@
 #include "stm32f1xx_hal.h"
 
 /* Private typedef -----------------------------------------------------------*/
+
+typedef	struct Example 
+{
+   unsigned char S0;
+   unsigned char S1;
+   unsigned char S2;
+   unsigned char S3;
+   unsigned char S4;
+}Example;
+
 typedef	struct POINT 
 {
    uint16_t x;
@@ -45,26 +55,37 @@ long double An,
             Divider ;
 } Matrix ;
 
+typedef volatile uint16_t My_color;
+
 /* Private variables ---------------------------------------------------------*/
 extern Coordinate ScreenSample[3];
 extern Coordinate DisplaySample[3];
 extern Matrix matrix ;
 extern Coordinate  display ;
+extern Example example;
+extern My_color my_color;
 
 /* Private define ------------------------------------------------------------*/
-/* AD channel selection command and register */
-#define	CHX 	0x90 	/* channel Y+ selection command */	
-#define	CHY 	0xd0	/* channel X+ selection command*/
+/* AD通道选择命令字和工作寄存器 */
+#define	CHX 	0x90 	/* 通道Y+的选择控制字 */	
+#define	CHY 	0xd0	/* 通道X+的选择控制字 */
 
+
+
+
+ void TP_GetAdXY(int *x,int *y);
 
 /* Private function prototypes -----------------------------------------------*/				
 void TP_Init(void);	
 Coordinate *Read_Ads7846(void);
-void TouchPanel_Calibrate(void);
+void TouchPanel_Calibrate(uint8_t CalSiNo);
 void DrawCross(uint16_t Xpos,uint16_t Ypos);
 void TP_DrawPoint(uint16_t Xpos,uint16_t Ypos);
 FunctionalState setCalibrationMatrix( Coordinate * displayPtr,Coordinate * screenPtr,Matrix * matrixPtr);
 FunctionalState getDisplayPoint(Coordinate * displayPtr,Coordinate * screenPtr,Matrix * matrixPtr );
+uint8_t LCD_TouchRead(Coordinate * displayPtr);
+void GetFormat(void);
+uint8_t LCD_FormatRead(void); 
 
 #endif
 

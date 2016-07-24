@@ -20,6 +20,8 @@
 "tft_lcd_hy32d_fsmc\stm32f1xx_hal_tim.o"
 "tft_lcd_hy32d_fsmc\stm32f1xx_hal_rtc.o"
 "tft_lcd_hy32d_fsmc\stm32f1xx_hal_rtc_ex.o"
+"tft_lcd_hy32d_fsmc\stm32f1xx_hal_spi.o"
+"tft_lcd_hy32d_fsmc\stm32f1xx_hal_spi_ex.o"
 "tft_lcd_hy32d_fsmc\stm32f1xx_it.o"
 "tft_lcd_hy32d_fsmc\stm32f1xx_hal_msp.o"
 "tft_lcd_hy32d_fsmc\main.o"
