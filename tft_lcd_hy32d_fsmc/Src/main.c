@@ -604,10 +604,10 @@ TP_Init();
 
 		
 		
- 	LCD_Clear(yellow);
+ 	LCD_Clear(yellow);/*
   LCD_WriteString_5x7(20, 240 - 30, "Hello world.", red, yellow, 0, 1);
 	LCD_WriteString_5x7(20, 240 - 30 - 20, "STM32F103VET6", green, yellow, 0, 1);
-
+*/
 	
   /* USER CODE END 2 */
 
@@ -623,7 +623,7 @@ TP_Init();
   //LCD_Draw_Rectangle(50, 160, 150, 175, red, 1);
   //LCD_Draw_Rectangle(10, 10, 40, 40, blue, 1);
   //LCD_Draw_Rectangle(20, 20, 60, 60, white, 1);
-		
+		/*
 		memset(buf,0,100);
 		sprintf(buf, "Date: %02d/%02d/%02d", sDate.Date, sDate.Month, sDate.Year);
 LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
@@ -631,22 +631,27 @@ LCD_WriteString_5x7(50,100, buf, magneta, yellow,0, 2);
 sprintf(buf, "Time: %02d:%02d:%02d", sTime.Hours, sTime.Minutes, sTime.Seconds);
 LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
 //HAL_UART_Transmit(&huart1,(uint8_t*)&buf, strlen(buf), 10);
-
+*/
 		//Read_Ads7846();
 		//LCD_TouchRead(&display);
-		int x,y;
+	/*	int x,y;
 		TP_GetAdXY(&x,&y); 
-				sprintf(buf, "x %d y %d", x,y);
+				sprintf(buf, "x %05d y %05d", x,y);
 LCD_WriteString_5x7(50, 50, buf, magneta, yellow,0, 2);
-		
+		*/
+		HAL_Delay(10);
 		
 		if(Read_Ads7846() != 0){
 		getDisplayPoint(&display, Read_Ads7846(), &matrix ) ; // ???????? ?????
  					//	 TP_DrawPoint(display.x,display.y);	// ?????????? ?????
 
-		sprintf(buf, "xS %d yS %d", display.x,display.y);
+		sprintf(buf, "xS %03d yS %03d", display.x,display.y);
 LCD_WriteString_5x7(50, 75, buf, magneta, yellow,0, 2);
+			LCD_Draw_Rectangle(display.y,display.x,display.y+3,display.x+3,red,1);
+		}else{
+		//sprintf(buf, "xS NON yS NON");
 		}
+		
 	/*	if(sTime.Seconds %10 ==0){
 		     res = f_open(&testFile, (char*)path, FA_READ |FA_WRITE );
 		uint16_t tmp = f_size(&testFile);
