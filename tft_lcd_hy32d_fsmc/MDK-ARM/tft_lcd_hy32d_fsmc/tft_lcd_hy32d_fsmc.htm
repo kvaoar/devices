@@ -3,9 +3,9 @@
 <title>Static Call Graph - [tft_lcd_hy32d_fsmc\tft_lcd_hy32d_fsmc.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image tft_lcd_hy32d_fsmc\tft_lcd_hy32d_fsmc.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Mon Jul 25 03:19:08 2016
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5040049: Last Updated: Fri Jul 29 22:38:27 2016
 <BR><P>
-<H3>Maximum Stack Usage =        952 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        960 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 main &rArr; TouchPanel_Calibrate &rArr; Read_Ads7846 &rArr; TP_GetAdXY &rArr; Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 <P>
@@ -1616,19 +1616,18 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f103xe.o(RESET)
 </UL>
-<P><STRONG><a name="[13f]"></a>Read_Ads7846</STRONG> (Thumb, 502 bytes, Stack size 112 bytes, touchpanel.o(i.Read_Ads7846))
+<P><STRONG><a name="[13f]"></a>Read_Ads7846</STRONG> (Thumb, 498 bytes, Stack size 112 bytes, touchpanel.o(i.Read_Ads7846))
 <BR><BR>[Stack]<UL><LI>Max Depth = 248<LI>Call Chain = Read_Ads7846 &rArr; TP_GetAdXY &rArr; Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ADS7843_SPI_Init
+<BR>[Calls]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_GetAdXY
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_INT_IN
-<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_GetAdXY
 <LI><a href="#[f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TouchPanel_Calibrate
 <LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[142]"></a>Read_X</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, touchpanel.o(i.Read_X))
+<P><STRONG><a name="[142]"></a>Read_X</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, touchpanel.o(i.Read_X))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = Read_X &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WR_CMD
@@ -1639,7 +1638,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_GetAdXY
 </UL>
 
-<P><STRONG><a name="[146]"></a>Read_Y</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, touchpanel.o(i.Read_Y))
+<P><STRONG><a name="[146]"></a>Read_Y</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, touchpanel.o(i.Read_Y))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WR_CMD
@@ -1845,14 +1844,14 @@ Global Symbols
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_X
 </UL>
 
-<P><STRONG><a name="[140]"></a>TP_GetAdXY</STRONG> (Thumb, 40 bytes, Stack size 24 bytes, touchpanel.o(i.TP_GetAdXY))
+<P><STRONG><a name="[140]"></a>TP_GetAdXY</STRONG> (Thumb, 28 bytes, Stack size 24 bytes, touchpanel.o(i.TP_GetAdXY))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = TP_GetAdXY &rArr; Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 </UL>
-<BR>[Calls]<UL><LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DelayUS
-<LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Y
+<BR>[Calls]<UL><LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Y
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_X
 </UL>
 <BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Ads7846
+<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[141]"></a>TP_INT_IN</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, touchpanel.o(i.TP_INT_IN))
@@ -2506,8 +2505,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[5d]"></a>main</STRONG> (Thumb, 232 bytes, Stack size 688 bytes, main.o(i.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 952<LI>Call Chain = main &rArr; TouchPanel_Calibrate &rArr; Read_Ads7846 &rArr; TP_GetAdXY &rArr; Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
+<P><STRONG><a name="[5d]"></a>main</STRONG> (Thumb, 276 bytes, Stack size 696 bytes, main.o(i.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 960<LI>Call Chain = main &rArr; TouchPanel_Calibrate &rArr; Read_Ads7846 &rArr; TP_GetAdXY &rArr; Read_Y &rArr; RD_AD &rArr; HAL_SPI_Receive &rArr; HAL_SPI_TransmitReceive &rArr; SPI_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
 <LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
@@ -2516,6 +2515,7 @@ Global Symbols
 <LI><a href="#[195]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_mount
 <LI><a href="#[168]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TouchPanel_Calibrate
 <LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_Init
+<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_GetAdXY
 <LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Ads7846
 <LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USB_DEVICE_Init
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FATFS_Init
@@ -2912,14 +2912,12 @@ Local Symbols
 <BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SPI_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_Init
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Ads7846
 </UL>
 
 <P><STRONG><a name="[144]"></a>DelayUS</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, touchpanel.o(i.DelayUS))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = DelayUS
 </UL>
-<BR>[Called By]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TP_GetAdXY
-<LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Y
+<BR>[Called By]<UL><LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_Y
 <LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Read_X
 </UL>
 

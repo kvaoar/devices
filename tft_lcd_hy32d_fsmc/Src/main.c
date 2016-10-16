@@ -634,12 +634,10 @@ LCD_WriteString_5x7(50, 160, buf, magneta, yellow,0, 2);
 */
 		//Read_Ads7846();
 		//LCD_TouchRead(&display);
-	/*	int x,y;
+		int x,y;
 		TP_GetAdXY(&x,&y); 
 				sprintf(buf, "x %05d y %05d", x,y);
 LCD_WriteString_5x7(50, 50, buf, magneta, yellow,0, 2);
-		*/
-		HAL_Delay(10);
 		
 		if(Read_Ads7846() != 0){
 		getDisplayPoint(&display, Read_Ads7846(), &matrix ) ; // ???????? ?????
@@ -647,7 +645,7 @@ LCD_WriteString_5x7(50, 50, buf, magneta, yellow,0, 2);
 
 		sprintf(buf, "xS %03d yS %03d", display.x,display.y);
 LCD_WriteString_5x7(50, 75, buf, magneta, yellow,0, 2);
-			LCD_Draw_Rectangle(display.y,display.x,display.y+3,display.x+3,red,1);
+			LCD_Draw_Rectangle(display.y,display.x,display.y+2,display.x+2,red,1);
 		}else{
 		//sprintf(buf, "xS NON yS NON");
 		}

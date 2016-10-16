@@ -183,7 +183,7 @@ static void DelayUS(uint32_t cnt)
   uint16_t i;
   for(i = 0;i<cnt;i++)
   {
-     uint8_t us = 12; /* 设置值为12，大约延1微秒 */    
+     uint8_t us = 6; /* 设置值为12，大约延1微秒 */    
      while (us--)     /* 延1微秒	*/
      {
        ;   
@@ -237,7 +237,7 @@ static int RD_AD(void)
   //temp=SPI_I2S_ReceiveData(SPI1); 
 	HAL_SPI_Receive(&hspi1,(uint8_t*)&temp,1,100);
   buf=temp<<8; 
-  DelayUS(1); 
+  //DelayUS(1); 
   //while (SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET); 
   /* Send SPI1 data */ 
   //SPI_I2S_SendData(SPI1,0x0000); 
@@ -267,7 +267,7 @@ int Read_X(void)
   TP_CS(0); 
   DelayUS(1); 
   WR_CMD(CHX); 
-  DelayUS(1); 
+ // DelayUS(1); 
   i=RD_AD(); 
   TP_CS(1); 
   return i;    
@@ -287,7 +287,7 @@ int Read_Y(void)
   TP_CS(0); 
   DelayUS(1); 
   WR_CMD(CHY); 
-  DelayUS(1); 
+  //DelayUS(1); 
   i=RD_AD(); 
   TP_CS(1); 
   return i;     
@@ -305,7 +305,6 @@ void TP_GetAdXY(int *x,int *y)
 { 
   int adx,ady; 
   adx=Read_X(); 
-  DelayUS(1); 
   ady=Read_Y(); 
   *x=adx; 
   *y=ady; 
@@ -371,7 +370,7 @@ Coordinate *Read_Ads7846(void)
   int m0,m1,m2,TP_X[1],TP_Y[1],temp[3];
   uint8_t count=0;
   int buffer[2][9]={{0},{0}};  /* 坐标X和Y进行多次采样 */
-  ADS7843_SPI_Init(); 		
+  //ADS7843_SPI_Init(); 		
   do					       /* 循环采样9次 */
   {		   
     TP_GetAdXY(TP_X,TP_Y);  
@@ -380,9 +379,9 @@ Coordinate *Read_Ads7846(void)
 	count++;  
   }
   while((TP_INT_IN()==0)&& count<9);  /* TP_INT_IN为触摸屏中断引脚,当用户点击触摸屏时TP_INT_IN会被置低 */
-  if(count==9)   /* 成功采样9次,进行滤波 */ 
+  if(count>=9)   /* 成功采样9次,进行滤波 */ 
   {
-while(1);		
+
     /* 为减少运算量,分别分3组取平均值 */
     temp[0]=(buffer[0][0]+buffer[0][1]+buffer[0][2])/3;
 	temp[1]=(buffer[0][3]+buffer[0][4]+buffer[0][5])/3;
