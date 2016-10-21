@@ -80,8 +80,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_TIM3_Init();
-  MX_USB_DEVICE_Init();
+//  MX_TIM3_Init();
+  //MX_USB_DEVICE_Init();
 HAL_Delay(1000);
   /* USER CODE BEGIN 2 */
 ad9850_init();
@@ -97,7 +97,7 @@ ad9850_init();
 		//freq += 100;
 		//if(freq > 30000000) freq = 0;
 		ad9850_freq(100000);
-		CDC_Transmit_FS((uint8_t*)"hello\n",6);
+	//	CDC_Transmit_FS((uint8_t*)"hello\n",6);
 		HAL_Delay(50);
 
   }
@@ -183,9 +183,11 @@ void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOD_CLK_ENABLE();
+  
   __HAL_RCC_GPIOA_CLK_ENABLE();
-
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
+	
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, MOSI_Pin|CLK_Pin|NSS_Pin, GPIO_PIN_RESET);
 
@@ -194,6 +196,17 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+	GPIO_InitStruct.Pin = MOD_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    HAL_GPIO_Init(MOD_GPIO_Port, &GPIO_InitStruct);
+	
+	HAL_GPIO_WritePin(RST_GPIO_Port, RST_Pin, GPIO_PIN_SET);
+	GPIO_InitStruct.Pin = RST_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(RST_GPIO_Port, &GPIO_InitStruct);
 
 }
 

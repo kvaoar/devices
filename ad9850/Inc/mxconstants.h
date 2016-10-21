@@ -44,8 +44,11 @@
 #define CLK_GPIO_Port GPIOA
 #define NSS_Pin GPIO_PIN_5
 #define NSS_GPIO_Port GPIOA
-#define MODULATION_Pin GPIO_PIN_7
-#define MODULATION_GPIO_Port GPIOA
+#define MOD_Pin GPIO_PIN_7
+#define MOD_GPIO_Port GPIOA
+//pc15 reset low - start
+#define RST_Pin GPIO_PIN_15
+#define RST_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
