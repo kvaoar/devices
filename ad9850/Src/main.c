@@ -89,7 +89,7 @@ ad9850_init();
 	init_term();
   /* USER CODE END 2 */
 //help(7," 1 2 3 ");
-
+//t_addstr("help 8 10 15g\r",14);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)

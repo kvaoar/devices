@@ -29,42 +29,86 @@ CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
 		HAL_Delay(100);
 }
 
+
+int param_parser(int len, char* param,TParam* plist, int max_par_cnt , char space){
+  int par_cnt = 0;
+	for(int start = 0; start < len-1; start++){
+	if((param[start] == space)&&(param[(start+1)] != ' '))
+		{
+			int end = start+1; 
+			while(end <= len)
+			{
+				if((param[end] == space)||(end == len ))
+					{
+					if(par_cnt < max_par_cnt)
+						{
+						plist[par_cnt].p = &param[start+1];
+						plist[par_cnt].l = (end-1)-start;
+						par_cnt++;
+						}
+					start = end-1;
+					break;
+					}
+			end++;
+			}
+		}
+	}
+	return par_cnt;
+}
+
+
 // command1
 void help (int len, char* param){
-
-	char* p0 = param;
-	char* p = strchr(p0,' ');
+	const int max_par_cnt = 3;
+	TParam plist[max_par_cnt] = {{0,0},{0,0},{0,0}};
+ 
+//	int par_cnt = 0;
 	static char hbuf[20];
-//	memset(hbuf,0,20);
- //int i = 0;
- //int l = (20< len)?20:len;
+
+
+	/*
 			CDC_Transmit_FS((uint8_t*) "\'",1);
 		HAL_Delay(100);
 	CDC_Transmit_FS((uint8_t*) param,len);
 	HAL_Delay(100);
 			CDC_Transmit_FS((uint8_t*) "\'",1);
 		HAL_Delay(100);
-	
-	while((p != NULL)&&(((p+1)-param)<=len)){
-		int plen = p - p0;
-		if(plen == 0 ) { 
-				p0++; 
-				p = strchr(p0,' '); 
-				continue;
-			};
+	*/
+	/*
+	for(int start = 0; start < len-1; start++){
+	if((param[start] == ' ')&&(param[(start+1)] != ' '))
+		{
+			int end = 1+start; 
+			while(end <= len)
+			{
+				
+				if((param[end] == ' ')||(end == len ))
+					{
+					if(par_cnt < max_par_cnt)
+						{
+						plist[par_cnt].p = &param[start+1];
+						plist[par_cnt].l = (end-1)-start;
+						par_cnt++;
+						}
+					start = end-1;
+					break;
+					}
+			end++;
+			}
+		}
+	}
+	*/
+int par_cnt = param_parser(len,param,plist,max_par_cnt,' ');
+	for(int i = 0; i < par_cnt; i++){
 		memset(hbuf,0,20);
-		memcpy(hbuf,p0,plen);
+		memcpy(hbuf,plist[i].p,plist[i].l);
 		//*p = '\n';
-		CDC_Transmit_FS((uint8_t*) "\'",1);
+		CDC_Transmit_FS((uint8_t*) "=",1);
 		HAL_Delay(100);
-		CDC_Transmit_FS((uint8_t*) hbuf,plen);
+		CDC_Transmit_FS((uint8_t*) hbuf,plist[i].l);
 		HAL_Delay(100);
-		CDC_Transmit_FS((uint8_t*) "\'",1);
+		CDC_Transmit_FS((uint8_t*) "\n",1);
 			HAL_Delay(100);
-			
-			p0 = p+1;
-			p = strchr(p0,' ');
-		
 	}
 	
 };
@@ -77,7 +121,7 @@ CDC_Transmit_FS((uint8_t*)str, strlen(str));
 
 
 void t_addstr(char* str, uint32_t len){
-CDC_Transmit_FS((uint8_t*) str,len);
+//CDC_Transmit_FS((uint8_t*) str,len);
 if(len > (bufsize-rx_fill)) 
 	{
 	init_term();
