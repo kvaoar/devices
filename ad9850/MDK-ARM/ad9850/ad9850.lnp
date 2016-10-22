@@ -26,6 +26,7 @@
 "ad9850\main.o"
 "ad9850\stm32f1xx_it.o"
 "ad9850\ad9850.o"
+"ad9850\terminal.o"
 "ad9850\system_stm32f1xx.o"
 --library_type=microlib --strict --scatter "ad9850\ad9850.sct"
 

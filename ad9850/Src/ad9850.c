@@ -57,7 +57,7 @@ void ad9850_freq(uint32_t f) {
 }
 
 void ad9850_init(void) {
-HAL_GPIO_WritePin(MOD_GPIO_Port, MOD_Pin, GPIO_PIN_SET);
+HAL_GPIO_WritePin(MOD_GPIO_Port, MOD_Pin, GPIO_PIN_RESET);
 HAL_GPIO_WritePin(RST_GPIO_Port, RST_Pin, GPIO_PIN_RESET);
 //	clk();
 //	freq_upd();

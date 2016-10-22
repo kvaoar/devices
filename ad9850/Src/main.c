@@ -36,6 +36,7 @@
 #include "usbd_cdc_if.h"
 /* USER CODE BEGIN Includes */
 #include "ad9850.h"
+#include "terminal.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -81,11 +82,13 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
 //  MX_TIM3_Init();
-  //MX_USB_DEVICE_Init();
+MX_USB_DEVICE_Init();
 HAL_Delay(1000);
   /* USER CODE BEGIN 2 */
 ad9850_init();
+	init_term();
   /* USER CODE END 2 */
+//help(7," 1 2 3 ");
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -98,8 +101,8 @@ ad9850_init();
 		//if(freq > 30000000) freq = 0;
 		ad9850_freq(100000);
 	//	CDC_Transmit_FS((uint8_t*)"hello\n",6);
-		HAL_Delay(50);
-
+		HAL_Delay(300);
+t_exe();
   }
   /* USER CODE END 3 */
 
