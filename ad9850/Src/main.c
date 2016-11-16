@@ -44,7 +44,7 @@ TIM_HandleTypeDef htim3;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-uint32_t freq = 0;
+uint32_t freq = 30000000;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -86,7 +86,10 @@ MX_USB_DEVICE_Init();
 HAL_Delay(1000);
   /* USER CODE BEGIN 2 */
 ad9850_init();
-	init_term();
+	term_init();
+	HAL_Delay(300);
+	
+//	term_addstr("help 1 2 35\r",12);
   /* USER CODE END 2 */
 //help(7," 1 2 3 ");
 //t_addstr("help 8 10 15g\r",14);
@@ -99,10 +102,11 @@ ad9850_init();
   /* USER CODE BEGIN 3 */
 		//freq += 100;
 		//if(freq > 30000000) freq = 0;
-		ad9850_freq(100000);
+		ad9850_freq(freq);
 	//	CDC_Transmit_FS((uint8_t*)"hello\n",6);
 		HAL_Delay(300);
-t_exe();
+		
+term_exe();
   }
   /* USER CODE END 3 */
 

@@ -2,23 +2,25 @@
 #define __TERMINAL_H
 #include "stm32f1xx_hal.h"
 
-
-typedef void(*COMMAND)( int len, char* param ); 
-void help (int len, char* param);
-
-typedef struct{
- char cmd [10];
- COMMAND exe;
-} TDictonary;
-
 typedef struct{
  char* p;
  int l;
-} TParam;
+} TString;
 
-void init_term(void);
-void t_print(const char* str);
-void t_addstr(char* str, uint32_t len);
-void t_exe(void);
+typedef void(*COMMAND)( TString param  ); 
+
+typedef struct{
+ TString cmd;
+ COMMAND exe;
+} TDictonary;
+
+void help (TString param );
+void fset (TString param );
+
+void term_init(void);
+void term_reset(void);
+void term_print(const char* str);
+void term_addstr(char* str, uint32_t len);
+void term_exe(void);
 
 #endif

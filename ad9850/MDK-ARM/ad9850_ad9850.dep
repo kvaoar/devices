@@ -717,7 +717,7 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x55844EA1)
 I (../Inc/usbd_desc.h)(0x5801442A)
-F (../Src/usbd_cdc_if.c)(0x580AFB9E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\usbd_cdc_if.o --omf_browse ad9850\usbd_cdc_if.crf --depend ad9850\usbd_cdc_if.d)
+F (../Src/usbd_cdc_if.c)(0x5816527B)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\usbd_cdc_if.o --omf_browse ad9850\usbd_cdc_if.crf --depend ad9850\usbd_cdc_if.d)
 I (../Inc/usbd_cdc_if.h)(0x5801442A)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x55844EA1)
@@ -756,8 +756,8 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h)(0x579539B1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h)(0x579539B1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x55844EA1)
-I (../Inc/terminal.h)(0x580AEDC2)
-F (../Src/main.c)(0x580B0159)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\main.o --omf_browse ad9850\main.crf --depend ad9850\main.d)
+I (../Inc/terminal.h)(0x581657B2)
+F (../Src/main.c)(0x5818C909)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\main.o --omf_browse ad9850\main.crf --depend ad9850\main.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x579539B1)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5801442A)
 I (../Inc/mxconstants.h)(0x580A54F2)
@@ -798,7 +798,7 @@ I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x55844EA1)
 I (../Inc/ad9850.h)(0x58022CBF)
-I (../Inc/terminal.h)(0x580AEDC2)
+I (../Inc/terminal.h)(0x581657B2)
 F (../Src/stm32f1xx_it.c)(0x580ADC94)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\stm32f1xx_it.o --omf_browse ad9850\stm32f1xx_it.crf --depend ad9850\stm32f1xx_it.d)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h)(0x579539B1)
 I (../Inc/stm32f1xx_hal_conf.h)(0x5801442A)
@@ -861,7 +861,7 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_tim_ex.h)(0x579539B1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd.h)(0x579539B1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h)(0x579539B1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h)(0x579539B1)
-F (..\Src\terminal.c)(0x580B02EB)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\terminal.o --omf_browse ad9850\terminal.crf --depend ad9850\terminal.d)
+F (..\Src\terminal.c)(0x5818CD7C)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\terminal.o --omf_browse ad9850\terminal.crf --depend ad9850\terminal.d)
 I (../Inc/usbd_cdc_if.h)(0x5801442A)
 I (../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ioreq.h)(0x55844EA1)
@@ -900,7 +900,9 @@ I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_ll_usb.h)(0x579539B1)
 I (../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pcd_ex.h)(0x579539B1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h)(0x55844EA1)
 I (../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_ctlreq.h)(0x55844EA1)
-I (../Inc/terminal.h)(0x580AEDC2)
+I (../Inc/terminal.h)(0x581657B2)
+I (../Inc/ad9850.h)(0x58022CBF)
+I (../Inc/main.h)(0x5818C99E)
 F (../Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c)(0x56698C7A)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I../Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Middlewares/ST/STM32_USB_Device_Library/Core/Inc -I../Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include --C99-I D:\git\devices\ad9850\MDK-ARM\RTE-I D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include-I D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0-D_RTE_ -DSTM32F10X_MD -DUSE_HAL_DRIVER -DSTM32F103xB-o ad9850\system_stm32f1xx.o --omf_browse ad9850\system_stm32f1xx.crf --depend ad9850\system_stm32f1xx.d)
 I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h)(0x56698C7A)
 I (../Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h)(0x56698C7A)
