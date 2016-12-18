@@ -41,4 +41,16 @@
 
 
 void ads1256_init(SPI_HandleTypeDef* spi);
+uint8_t ads1256_getstatus(void);
+void ads1256_read_data_continue_start();
+uint32_t ads1256_read_data(void);
+GPIO_PinState drdy_tst();
+	void ads1256_sync();
+void	ads1256_wake_up();
+void ads1256_cmd(uint8_t c);
+
+
+void nss_hi();
+void nss_low();
+
 #endif

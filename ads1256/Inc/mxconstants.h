@@ -39,9 +39,11 @@
 /* Private define ------------------------------------------------------------*/
 
 #define rst_Pin GPIO_PIN_0
-#define rst_GPIO_Port GPIOA
+#define rst_GPIO_Port GPIOB
+
 #define drdy_Pin GPIO_PIN_1
-#define drdy_GPIO_Port GPIOA
+#define drdy_GPIO_Port GPIOB
+
 #define nss_Pin GPIO_PIN_4
 #define nss_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

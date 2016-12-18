@@ -32,9 +32,12 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+#include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
+#include "usbd_cdc_if.h"
 #include "ads1256.h"
+#include "mathstat.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -77,9 +80,17 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
+	
+  MX_USB_DEVICE_Init();
 
   /* USER CODE BEGIN 2 */
-
+	HAL_Delay(1000);
+	
+	ads1256_init(&hspi1);
+	
+//	if(drdy_tst() == GPIO_PIN_RESET)
+ //ads1256_read_data_continue_start();
+int32_t i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -88,6 +99,26 @@ int main(void)
   {
   /* USER CODE END WHILE */
 
+		if(drdy_tst() == GPIO_PIN_RESET)
+		{
+		ads1256_wake_up();
+		ads1256_cmd(ADS1256_RDATA);
+			i = ads1256_read_data();
+			uint32_t m = i&0x7FFFFF;
+			if(i&0x800000) i = m-0x800000;
+			else i = m;
+		char buf[255];
+			float u = (5.0*i/((16777216/2)-1))+0.000012;
+			
+			if(FillData(0,u) == 0){
+				StatResult r = Calculate(0,0.000001,0.0001);
+		sprintf(buf,"%+09.6f div %+09.6f\r\n",r.value,r.delta);
+				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
+			}
+		
+		//HAL_Delay(1000);
+		}
+		//HAL_Delay(10);
   /* USER CODE BEGIN 3 */
 
   }
@@ -102,6 +133,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitTypeDef RCC_OscInitStruct;
   RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_PeriphCLKInitTypeDef PeriphClkInit;
 
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
@@ -118,6 +150,10 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
   HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1);
+
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLL;
+  HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
   HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
 
@@ -136,9 +172,9 @@ void MX_SPI1_Init(void)
   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
-  hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -162,15 +198,23 @@ void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, rst_Pin|nss_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : rst_Pin nss_Pin */
-  GPIO_InitStruct.Pin = rst_Pin|nss_Pin;
+	
+	 GPIO_InitStruct.Pin = nss_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(nss_GPIO_Port, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(nss_GPIO_Port,nss_Pin,GPIO_PIN_SET);
+	
+  GPIO_InitStruct.Pin = rst_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
+		HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
 
   /*Configure GPIO pin : drdy_Pin */
   GPIO_InitStruct.Pin = drdy_Pin;
