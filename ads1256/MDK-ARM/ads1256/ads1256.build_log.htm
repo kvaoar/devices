@@ -8,29 +8,9 @@ Project File Date:  12/18/2016
 
 <h2>Output:</h2>
 Build target 'ads1256'
-compiling ads1256.c...
-../Inc/ads1256.h(45): warning:  #1295-D: Deprecated declaration ads1256_read_data_continue_start - give arg types
-  void ads1256_read_data_continue_start();
-../Inc/ads1256.h(47): warning:  #1295-D: Deprecated declaration drdy_tst - give arg types
-  GPIO_PinState drdy_tst();
-../Inc/ads1256.h(48): warning:  #1295-D: Deprecated declaration ads1256_sync - give arg types
-        void ads1256_sync();
-../Inc/ads1256.h(49): warning:  #1295-D: Deprecated declaration ads1256_wake_up - give arg types
-  void  ads1256_wake_up();
-../Inc/ads1256.h(53): warning:  #1295-D: Deprecated declaration nss_hi - give arg types
-  void nss_hi();
-../Inc/ads1256.h(54): warning:  #1295-D: Deprecated declaration nss_low - give arg types
-  void nss_low();
-..\Src\ads1256.c: 6 warnings, 0 errors
-compiling mathstat.c...
-../Inc/mathstat.h(44): warning:  #1295-D: Deprecated declaration GetLength - give arg types
-  uint16_t GetLength();
-..\Src\mathstat.c(234): warning:  #188-D: enumerated type mixed with another type
-  float k = GetStudentsKoefficient(L, P); //(2)
-..\Src\mathstat.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=18824 RO-data=284 RW-data=948 ZI-data=6276  
-"ads1256\ads1256.axf" - 0 Error(s), 8 Warning(s).
+Program Size: Code=17320 RO-data=284 RW-data=376 ZI-data=3776  
+"ads1256\ads1256.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -53,35 +33,19 @@ Load "ads1256\\ads1256.axf"
 Erase Done.
 Programming Done.
 Verify OK.
-ORE:3.30.0
-      Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
-Target not created
-clude
-  D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0
+eclaration GetLength - give arg types
+  uint16_t GetLength();
+../Src/main.c: 7 warnings, 0 errors
+linking...
+Program Size: Code=17320 RO-data=284 RW-data=376 ZI-data=3776  
+"ads1256\ads1256.axf" - 0 Error(s), 7 Warning(s).
 
-<h2>Collection of Component Files used:</h2>
+<h2>Software Packages used:</h2>
 
-   * Component: ARM::CMSIS:CORE:3.30.0
-      Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
-Target not created
-l5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include
-  D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0
-
-<h2>Collection of Component Files used:</h2>
-
-   * Component: ARM::CMSIS:CORE:3.30.0
-      Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
-Target not created
-rs:</h2>
-  D:\git\devices\ads1256\MDK-ARM\RTE
-  D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include
-  D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0
-
-<h2>Collection of Component Files used:</h2>
-
-   * Component: ARM::CMSIS:CORE:3.30.0
-      Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
-face Standard)
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.4.1.0.pack
+                ARM::CMSIS:CORE:3.30.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
    * Component: CORE Version: 3.30.0
 
 <h2>Collection of Component include folders:</h2>
@@ -94,6 +58,80 @@ face Standard)
    * Component: ARM::CMSIS:CORE:3.30.0
       Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
 Load "ads1256\\ads1256.axf" 
+Error: Flash Download failed  -  Target DLL has been cancelled
+Load "ads1256\\ads1256.axf" 
 Erase Done.
 Programming Done.
 Verify OK.
+_PeriphCLKConfig(&PeriphClkInit);
+../Src/main.c(159): error:  #757: function "HAL_RCC_GetHCLKFreq" is not a type name
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+../Src/main.c(159): error:  #18: expected a ")"
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+../Src/main.c(159): error:  #260-D: explicit type is missing ("int" assumed)
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+../Src/main.c(159): error:  #147-D: declaration is incompatible with "uint32_t HAL_SYSTICK_Config(uint32_t)" (declared at line 387 of "../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h")
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+../Src/main.c(161): error:  #79: expected a type specifier
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+../Src/main.c(161): error:  #260-D: explicit type is missing ("int" assumed)
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+../Src/main.c(161): error:  #147: declaration is incompatible with "void HAL_SYSTICK_CLKSourceConfig(uint32_t)" (declared at line 405 of "../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h")
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+../Src/main.c(164): error:  #40: expected an identifier
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+../Src/main.c(164): error:  #40: expected an identifier
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+../Src/main.c(164): error:  #260-D: explicit type is missing ("int" assumed)
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+../Src/main.c(164): error:  #92: identifier-list parameters may only be used in a function definition
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+../Src/main.c(164): error:  #147: declaration is incompatible with "void HAL_NVIC_SetPriority(IRQn_Type, uint32_t, uint32_t)" (declared at line 383 of "../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_cortex.h")
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+../Src/main.c(165): error:  #169: expected a declaration
+  }
+../Src/main.c(216): warning:  #12-D: parsing restarts here after previous syntax error
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+../Src/main.c(217): error:  #79: expected a type specifier
+    HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
+../Src/main.c(217): error:  #79: expected a type specifier
+    HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
+../Src/main.c(217): error:  #260-D: explicit type is missing ("int" assumed)
+    HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
+../Src/main.c(217): error:  #147: declaration is incompatible with "void HAL_GPIO_Init(GPIO_TypeDef *, GPIO_InitTypeDef *)" (declared at line 285 of "../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h")
+    HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
+../Src/main.c(218): error:  #79: expected a type specifier
+                HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
+../Src/main.c(218): error:  #79: expected a type specifier
+                HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
+../Src/main.c(218): error:  #757: constant "GPIO_PIN_RESET" is not a type name
+                HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
+../Src/main.c(218): error:  #260-D: explicit type is missing ("int" assumed)
+                HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
+../Src/main.c(218): error:  #147: declaration is incompatible with "void HAL_GPIO_WritePin(GPIO_TypeDef *, uint16_t, GPIO_PinState)" (declared at line 296 of "../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_gpio.h")
+                HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
+../Src/main.c(221): error:  #77-D: this declaration has no storage class or type specifier
+    GPIO_InitStruct.Pin = drdy_Pin;
+../Src/main.c(221): error:  #65: expected a ";"
+    GPIO_InitStruct.Pin = drdy_Pin;
+../Src/main.c: 9 warnings, 30 errors
+"ads1256\ads1256.axf" - 30 Error(s), 9 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.4.1.0.pack
+                ARM::CMSIS:CORE:3.30.0
+                CMSIS (Cortex Microcontroller Software Interface Standard)
+   * Component: CORE Version: 3.30.0
+
+<h2>Collection of Component include folders:</h2>
+  D:\git\devices\ads1256\MDK-ARM\RTE
+  D:\Keil5\ARM\PACK\ARM\CMSIS\4.1.0\CMSIS\Include
+  D:\Keil5\ARM\PACK\Keil\STM32F1xx_DFP\2.0.0
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:3.30.0
+      Source file:   CMSIS\UserCodeTemplates\ARM\ITM_Retarget.c
+Target not created

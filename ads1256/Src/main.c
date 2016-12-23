@@ -110,13 +110,14 @@ int32_t i = 0;
 		char buf[255];
 			float u = (5.0*i/((16777216/2)-1))+0.000012;
 			
-			if(FillData(0,u) == 0){
-				StatResult r = Calculate(0,0.000001,0.0001);
-		sprintf(buf,"%+09.6f div %+09.6f\r\n",r.value,r.delta);
+			//if(FillData(0,u) == 0){
+			//	StatResult r = Calculate(0,0.000001,0.0001);
+		//sprintf(buf,"%+09.6f div %+09.6f\r\n",r.value,r.delta);
+			sprintf(buf,"%+09.6f\r\n",u);
 				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
-			}
 		
-		//HAL_Delay(1000);
+		
+		HAL_Delay(100);
 		}
 		//HAL_Delay(10);
   /* USER CODE BEGIN 3 */

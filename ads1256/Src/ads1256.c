@@ -112,7 +112,7 @@ ads1256_hwreset();
 	HAL_Delay(1);
 	ads1256_write_reg(ADS1256_DRATE, 0x92);//23 92-500hz
 	HAL_Delay(1);
-	ads1256_write_reg(ADS1256_MUX, 0x12);
+	ads1256_write_reg(ADS1256_MUX, 0x10);
 	HAL_Delay(1);
 	ads1256_write_reg(ADS1256_ADCON, 0);//(1<<3)|(1<<4)
 	HAL_Delay(1);

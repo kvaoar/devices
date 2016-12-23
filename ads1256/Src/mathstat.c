@@ -4,7 +4,7 @@
 #include "stdlib.h"
 #include "float.h"
 
-#define STAT_MAX_LEN (500)
+#define STAT_MAX_LEN (50)
 #define STAT_MAX_CH (1)
 #define N_ITERATION (20)
 const int mstat_dbg = 0;
