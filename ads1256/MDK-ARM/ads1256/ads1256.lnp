@@ -24,14 +24,12 @@
 "ads1256\usbd_cdc_if.o"
 "ads1256\usbd_desc.o"
 "ads1256\usbd_conf.o"
-"ads1256\mathstat.o"
 "ads1256\startup_stm32f103xb.o"
 "ads1256\usbd_core.o"
 "ads1256\usbd_ctlreq.o"
 "ads1256\usbd_cdc.o"
 "ads1256\usbd_ioreq.o"
 --library_type=microlib --strict --scatter "ads1256\ads1256.sct"
-
 --diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list "ads1256.map" -o ads1256\ads1256.axf

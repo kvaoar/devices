@@ -37,7 +37,7 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "ads1256.h"
-#include "mathstat.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -59,7 +59,7 @@ static void MX_SPI1_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
-
+		char buf[255];
 /* USER CODE END 0 */
 
 int main(void)
@@ -81,16 +81,30 @@ int main(void)
   MX_GPIO_Init();
   MX_SPI1_Init();
 	
-  MX_USB_DEVICE_Init();
+
+	
+	HAL_Delay(100);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+	MX_USB_DEVICE_Init();
+	HAL_Delay(5000);
 
   /* USER CODE BEGIN 2 */
-	HAL_Delay(1000);
+	
 	
 	ads1256_init(&hspi1);
 	
+		while(drdy_tst() != GPIO_PIN_RESET){};
+		//ads1256_wake_up();
+		uint8_t reg[11];
+		read_regs(0, reg, 11);
+		for (int i = 0; i < 11;i++){
+				sprintf(buf,"r%02X v%02X\r\n",i,reg[i]);
+				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
+		}
+		
 //	if(drdy_tst() == GPIO_PIN_RESET)
  //ads1256_read_data_continue_start();
-int32_t i = 0;
+volatile int32_t i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -103,21 +117,36 @@ int32_t i = 0;
 		{
 		ads1256_wake_up();
 		ads1256_cmd(ADS1256_RDATA);
-			i = ads1256_read_data();
+			uint32_t code =ads1256_read_data();
+			i = code;
 			uint32_t m = i&0x7FFFFF;
+			
 			if(i&0x800000) i = m-0x800000;
 			else i = m;
-		char buf[255];
-			float u = (5.0*i/((16777216/2)-1))+0.000012;
+
+			volatile int32_t u = ((int64_t)5000000*(int64_t)(i*2)/(8388623-1));//x2
 			
-			//if(FillData(0,u) == 0){
-			//	StatResult r = Calculate(0,0.000001,0.0001);
-		//sprintf(buf,"%+09.6f div %+09.6f\r\n",r.value,r.delta);
-			sprintf(buf,"%+09.6f\r\n",u);
-				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
+
+				volatile uint8_t HB = (code&0x00FF0000)>>16;
+				volatile uint8_t MB = (code&0x0000FF00)>>8;
+				volatile uint8_t LB = (code&0x000000FF);
+				uint8_t MARK = 0xA0;
+				volatile uint8_t HBs = HB&0x80;
+				volatile uint8_t MBs= MB&0x80;
+				volatile uint8_t LBs= LB&0x80;
+				if(HBs) {MARK|= 0x04;HB = HB&0x7F;}
+				if(MBs) {MARK|= 0x02;MB = MB&0x7F;}
+				if(LBs) {MARK|= 0x01;LB = LB&0x7F;}
+			volatile uint32_t tmp2 = (MARK<<24)|(HB<<16)|(MB<<8)|(LB);
+			CDC_Transmit_FS((uint8_t*)&tmp2,4);
+			
+			
+			/*
+			sprintf(buf,"%08X %+09d.%01d\r\n",code, u/2,5*(u%2));
+			CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
+*/
 		
-		
-		HAL_Delay(100);
+		//HAL_Delay(100);
 		}
 		//HAL_Delay(10);
   /* USER CODE BEGIN 3 */
@@ -138,7 +167,7 @@ void SystemClock_Config(void)
 
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV1;
+  RCC_OscInitStruct.HSEPredivValue = RCC_HSE_PREDIV_DIV2;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL6;
@@ -222,6 +251,17 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(drdy_GPIO_Port, &GPIO_InitStruct);
+	
+	
+	
+	
+	////*PA 2 INIT TEST ir LED GPIO MODE*////
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_SET);
 
 }
 
