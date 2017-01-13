@@ -18,7 +18,7 @@ void ads1256_delay_t6(){
 }
 
 void ads1256_wait_drdy(){
-while(drdy_tst() == GPIO_PIN_SET){};
+while(HAL_GPIO_ReadPin(drdy_GPIO_Port,drdy_Pin) == GPIO_PIN_SET){	HAL_Delay(1);};
 }
 
 void ads1256_hwreset(){
@@ -117,30 +117,23 @@ AD_SpiHandle = spi;
 ads1256_hwreset();
 	nss_low();
 	
-	ads1256_write_reg(ADS1256_STATUS, ADS1256_STATUS_BUFEN);
-	HAL_Delay(100);
+	ads1256_write_reg(ADS1256_STATUS, ADS1256_STATUS_BUFEN);//ADS1256_STATUS_BUFEN
+	//HAL_Delay(100);
 	ads1256_wait_drdy();
-	ads1256_write_reg(ADS1256_MUX, ADS1256_MUX_AIN7P|ADS1256_MUX_AINGNDN);
-	HAL_Delay(100);
+	ads1256_write_reg(ADS1256_MUX, ADS1256_MUX_AIN2P|ADS1256_MUX_AINGNDN);
+	//HAL_Delay(100);
 	ads1256_wait_drdy();
 	ads1256_write_reg(ADS1256_ADCON, ADS1256_ADCON_CLKOUT_OFF|ADS1256_ADCON_ISENSOR_OFF|ADS1256_ADCON_PGA1 );//(1<<3)|(1<<4)
-	HAL_Delay(100);
+	//HAL_Delay(100);
 	ads1256_wait_drdy();
 	ads1256_write_reg(ADS1256_DRATE, ADS1256_DRATE_ADS1256_10SPS);
-	HAL_Delay(100);
+//	HAL_Delay(100);
 	ads1256_wait_drdy();
-ads1256_cmd( ADS1256_SELFCAL);
-	HAL_Delay(100);
-	ads1256_wait_drdy();
-	//HAL_Delay(1);
-	//ads1256_sync();
-	//ads1256_self_calibration();
-	//while(drdy_tst() == GPIO_PIN_RESET){};
-	//HAL_Delay(1);
-	//ads1256_wake_up();
-	//HAL_Delay(1);
-	
+		//HAL_Delay(2000);
+	//ads1256_wait_drdy();
+	//ads1256_cmd( ADS1256_SELFCAL);
 
+	//ads1256_wait_drdy();
 }
 
 uint8_t ads1256_getstatus(){

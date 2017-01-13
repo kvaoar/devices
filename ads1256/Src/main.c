@@ -60,6 +60,23 @@ static void MX_SPI1_Init(void);
 
 /* USER CODE BEGIN 0 */
 		char buf[255];
+		
+		uint32_t Coder(uint32_t adc_val, uint8_t MARK){
+			
+			MARK &= 0xF7;
+				volatile uint8_t HB = (adc_val&0x00FF0000)>>16;
+				volatile uint8_t MB = (adc_val&0x0000FF00)>>8;
+				volatile uint8_t LB = (adc_val&0x000000FF);
+
+				volatile uint8_t HBs = HB&0x80;
+				volatile uint8_t MBs= MB&0x80;
+				volatile uint8_t LBs= LB&0x80;
+			
+				if(HBs) {MARK|= 0x04;HB = HB&0x7F;}
+				if(MBs) {MARK|= 0x02;MB = MB&0x7F;}
+				if(LBs) {MARK|= 0x01;LB = LB&0x7F;}
+			volatile uint32_t tmp2 = (HB<<24)|(MB<<16)|(LB<<8)|(MARK);
+		}
 /* USER CODE END 0 */
 
 int main(void)
@@ -86,7 +103,7 @@ int main(void)
 	HAL_Delay(100);
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 	MX_USB_DEVICE_Init();
-	HAL_Delay(5000);
+	HAL_Delay(500);
 
   /* USER CODE BEGIN 2 */
 	
@@ -105,6 +122,7 @@ int main(void)
 //	if(drdy_tst() == GPIO_PIN_RESET)
  //ads1256_read_data_continue_start();
 volatile int32_t i = 0;
+		uint32_t code = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -117,34 +135,19 @@ volatile int32_t i = 0;
 		{
 		ads1256_wake_up();
 		ads1256_cmd(ADS1256_RDATA);
-			uint32_t code =ads1256_read_data();
+		code =ads1256_read_data();
 			i = code;
 			uint32_t m = i&0x7FFFFF;
-			
 			if(i&0x800000) i = m-0x800000;
 			else i = m;
+			double u = (5000.0*i/((16777216/2)-1));
+		uint32_t tmp = Coder(code, 0x80);
+		CDC_Transmit_FS((uint8_t*)&tmp,4);
+		HAL_Delay(3);
+			
+		//	sprintf(buf,"%08X %9.3f\r\n",code, u);
+		//	CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
 
-			volatile int32_t u = ((int64_t)5000000*(int64_t)(i*2)/(8388623-1));//x2
-			
-
-				volatile uint8_t HB = (code&0x00FF0000)>>16;
-				volatile uint8_t MB = (code&0x0000FF00)>>8;
-				volatile uint8_t LB = (code&0x000000FF);
-				uint8_t MARK = 0xA0;
-				volatile uint8_t HBs = HB&0x80;
-				volatile uint8_t MBs= MB&0x80;
-				volatile uint8_t LBs= LB&0x80;
-				if(HBs) {MARK|= 0x04;HB = HB&0x7F;}
-				if(MBs) {MARK|= 0x02;MB = MB&0x7F;}
-				if(LBs) {MARK|= 0x01;LB = LB&0x7F;}
-			volatile uint32_t tmp2 = (MARK<<24)|(HB<<16)|(MB<<8)|(LB);
-			CDC_Transmit_FS((uint8_t*)&tmp2,4);
-			
-			
-			/*
-			sprintf(buf,"%08X %+09d.%01d\r\n",code, u/2,5*(u%2));
-			CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
-*/
 		
 		//HAL_Delay(100);
 		}
