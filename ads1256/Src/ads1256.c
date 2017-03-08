@@ -23,9 +23,9 @@ while(HAL_GPIO_ReadPin(drdy_GPIO_Port,drdy_Pin) == GPIO_PIN_SET){	HAL_Delay(1);}
 
 void ads1256_hwreset(){
 	rst_low();
-HAL_Delay(100);
+HAL_Delay(10);
 	rst_hi();
-	HAL_Delay(100);
+	HAL_Delay(10);
 	ads1256_wait_drdy();
 }
 
@@ -120,7 +120,7 @@ ads1256_hwreset();
 	ads1256_write_reg(ADS1256_STATUS, ADS1256_STATUS_BUFEN);//ADS1256_STATUS_BUFEN
 	//HAL_Delay(100);
 	ads1256_wait_drdy();
-	ads1256_write_reg(ADS1256_MUX, ADS1256_MUX_AIN2P|ADS1256_MUX_AINGNDN);
+	ads1256_write_reg(ADS1256_MUX, ADS1256_MUX_AIN4P|ADS1256_MUX_AIN5N);
 	//HAL_Delay(100);
 	ads1256_wait_drdy();
 	ads1256_write_reg(ADS1256_ADCON, ADS1256_ADCON_CLKOUT_OFF|ADS1256_ADCON_ISENSOR_OFF|ADS1256_ADCON_PGA1 );//(1<<3)|(1<<4)

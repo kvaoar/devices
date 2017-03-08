@@ -24,6 +24,8 @@
 "ads1256\usbd_cdc_if.o"
 "ads1256\usbd_desc.o"
 "ads1256\usbd_conf.o"
+"ads1256\toslink.o"
+"ads1256\tssop.o"
 "ads1256\startup_stm32f103xb.o"
 "ads1256\usbd_core.o"
 "ads1256\usbd_ctlreq.o"

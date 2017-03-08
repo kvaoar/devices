@@ -76,6 +76,7 @@ static void MX_SPI1_Init(void);
 				if(MBs) {MARK|= 0x02;MB = MB&0x7F;}
 				if(LBs) {MARK|= 0x01;LB = LB&0x7F;}
 			volatile uint32_t tmp2 = (HB<<24)|(MB<<16)|(LB<<8)|(MARK);
+				return tmp2;
 		}
 /* USER CODE END 0 */
 
@@ -108,6 +109,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	
 	
+	ads1256_init(&hspi1);
 	ads1256_init(&hspi1);
 	
 		while(drdy_tst() != GPIO_PIN_RESET){};

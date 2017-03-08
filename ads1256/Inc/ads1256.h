@@ -86,7 +86,7 @@
 #define ADS1256_ADCON_ISENSOR_2UA 	(2<<3)//10 = Sensor Detect Current = 2µA
 #define ADS1256_ADCON_ISENSOR_10UA 	(3<<3)//11 = Sensor Detect Current = 10µA
 
-#define ADS1256_ADCON_PGA1 	(0)
+#define ADS1256_ADCON_PGA1 	(0) 
 #define ADS1256_ADCON_PGA2 	(1)
 #define ADS1256_ADCON_PGA4 	(2)
 #define ADS1256_ADCON_PGA8 	(3)
@@ -112,15 +112,15 @@
 
 void ads1256_init(SPI_HandleTypeDef* spi);
 uint8_t ads1256_getstatus(void);
-void ads1256_read_data_continue_start();
+void ads1256_read_data_continue_start(void);
 uint32_t ads1256_read_data(void);
-GPIO_PinState drdy_tst();
-	void ads1256_sync();
-void	ads1256_wake_up();
+GPIO_PinState drdy_tst(void);
+	void ads1256_sync(void);
+void	ads1256_wake_up(void);
 void ads1256_cmd(uint8_t c);
 void read_regs(uint8_t from_reg, uint8_t* to_buf, uint8_t bytes);
 
-void nss_hi();
-void nss_low();
+void nss_hi(void);
+void nss_low(void);
 
 #endif
