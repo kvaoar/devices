@@ -47,3 +47,4 @@ Temporary Items
 *.bak
 *.o
 *.d
+*.s

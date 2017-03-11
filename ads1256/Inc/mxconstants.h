@@ -4,7 +4,7 @@
   * Description        : This file contains the common defines of the application
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2016 STMicroelectronics
+  * COPYRIGHT(c) 2017 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -38,14 +38,18 @@
 
 /* Private define ------------------------------------------------------------*/
 
-#define rst_Pin GPIO_PIN_0
-#define rst_GPIO_Port GPIOB
-
-#define drdy_Pin GPIO_PIN_1
-#define drdy_GPIO_Port GPIOB
-
+#define TOSLINK_TX_Pin GPIO_PIN_2
+#define TOSLINK_TX_GPIO_Port GPIOA
 #define nss_Pin GPIO_PIN_4
 #define nss_GPIO_Port GPIOA
+#define rst_Pin GPIO_PIN_0
+#define rst_GPIO_Port GPIOB
+#define drdy_Pin GPIO_PIN_1
+#define drdy_GPIO_Port GPIOB
+#define usben_Pin GPIO_PIN_8
+#define usben_GPIO_Port GPIOA
+#define TSSOP_RX_Pin GPIO_PIN_7
+#define TSSOP_RX_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

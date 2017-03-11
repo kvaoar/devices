@@ -4,7 +4,7 @@
   * Description        : Main program body
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2016 STMicroelectronics
+  * COPYRIGHT(c) 2017 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -37,11 +37,16 @@
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
 #include "ads1256.h"
+#include "toslink.h"
+#include "tssop.h"
 
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
+
+UART_HandleTypeDef huart1;
+IRDA_HandleTypeDef hirda2;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -52,6 +57,8 @@ SPI_HandleTypeDef hspi1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_USART1_UART_Init(void);
+static void MX_USART2_IRDA_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -98,19 +105,23 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
-	
-
-	
-	HAL_Delay(100);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-	MX_USB_DEVICE_Init();
-	HAL_Delay(500);
+  MX_USB_DEVICE_Init();
+  MX_USART1_UART_Init();
+  MX_USART2_IRDA_Init();
 
   /* USER CODE BEGIN 2 */
 	
 	
+	
+	HAL_Delay(100);
+  HAL_GPIO_WritePin(usben_GPIO_Port, usben_Pin, GPIO_PIN_RESET);
+	MX_USB_DEVICE_Init();
+	HAL_Delay(500);
+	
 	ads1256_init(&hspi1);
 	ads1256_init(&hspi1);
+	
+	toslink_init(&hirda2);
 	
 		while(drdy_tst() != GPIO_PIN_RESET){};
 		//ads1256_wake_up();
@@ -121,10 +132,8 @@ int main(void)
 				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
 		}
 		
-//	if(drdy_tst() == GPIO_PIN_RESET)
- //ads1256_read_data_continue_start();
 volatile int32_t i = 0;
-		uint32_t code = 0;
+uint32_t code = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -133,7 +142,8 @@ volatile int32_t i = 0;
   {
   /* USER CODE END WHILE */
 
-		if(drdy_tst() == GPIO_PIN_RESET)
+  /* USER CODE BEGIN 3 */
+			if(drdy_tst() == GPIO_PIN_RESET)
 		{
 		ads1256_wake_up();
 		ads1256_cmd(ADS1256_RDATA);
@@ -154,7 +164,6 @@ volatile int32_t i = 0;
 		//HAL_Delay(100);
 		}
 		//HAL_Delay(10);
-  /* USER CODE BEGIN 3 */
 
   }
   /* USER CODE END 3 */
@@ -218,6 +227,37 @@ void MX_SPI1_Init(void)
 
 }
 
+/* USART1 init function */
+void MX_USART1_UART_Init(void)
+{
+
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  HAL_UART_Init(&huart1);
+
+}
+
+/* USART2 init function */
+void MX_USART2_IRDA_Init(void)
+{
+
+  hirda2.Instance = USART2;
+  hirda2.Init.BaudRate = 115200;
+  hirda2.Init.WordLength = IRDA_WORDLENGTH_8B;
+  hirda2.Init.Parity = IRDA_PARITY_NONE;
+  hirda2.Init.Mode = IRDA_MODE_TX_RX;
+  hirda2.Init.Prescaler = 1;
+  hirda2.Init.IrDAMode = IRDA_POWERMODE_NORMAL;
+  HAL_IRDA_Init(&hirda2);
+
+}
+
 /** Configure pins as 
         * Analog 
         * Input 
@@ -234,39 +274,30 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, rst_Pin|nss_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : rst_Pin nss_Pin */
-	
-	 GPIO_InitStruct.Pin = nss_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, nss_Pin|usben_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(rst_GPIO_Port, rst_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : nss_Pin usben_Pin */
+  GPIO_InitStruct.Pin = nss_Pin|usben_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(nss_GPIO_Port, &GPIO_InitStruct);
-	HAL_GPIO_WritePin(nss_GPIO_Port,nss_Pin,GPIO_PIN_SET);
-	
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : rst_Pin */
   GPIO_InitStruct.Pin = rst_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(rst_GPIO_Port, &GPIO_InitStruct);
-		HAL_GPIO_WritePin(rst_GPIO_Port,rst_Pin,GPIO_PIN_RESET);
 
   /*Configure GPIO pin : drdy_Pin */
   GPIO_InitStruct.Pin = drdy_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(drdy_GPIO_Port, &GPIO_InitStruct);
-	
-	
-	
-	
-	////*PA 2 INIT TEST ir LED GPIO MODE*////
-	
-	GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-	HAL_GPIO_WritePin(GPIOA,GPIO_PIN_2,GPIO_PIN_SET);
 
 }
 
