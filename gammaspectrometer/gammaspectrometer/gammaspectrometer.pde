@@ -45,7 +45,7 @@ void draw() {
 
 
   if (s != null) {
-      //println(s);
+      println(s);
       try{
         String[] inString = match(trim(s),"\\<(.*?)\\>\\[(.*?)\\]");
         println(unhex(inString[1]));
@@ -102,7 +102,7 @@ text(str(parttotal)+"prt",width-100,40);
  
 void serialEvent(Serial p) { 
 s = p.readString();
-println("1");
+//println("get");
 // String[] inString = match(trim(s),"<(.*?)>[(.*?)]");
 // for(int i = 0; i < inString.length; i++) println("tag "+inString[i]+";");
 /* String[] list = split(inString[1], ",");

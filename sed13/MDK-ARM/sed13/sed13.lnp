@@ -1,0 +1,26 @@
+--cpu Cortex-M3
+"sed13\system_stm32f1xx.o"
+"sed13\stm32f1xx_hal_dma.o"
+"sed13\stm32f1xx_hal_cortex.o"
+"sed13\stm32f1xx_hal_tim.o"
+"sed13\stm32f1xx_hal_gpio_ex.o"
+"sed13\stm32f1xx_hal_rcc.o"
+"sed13\stm32f1xx_hal.o"
+"sed13\stm32f1xx_hal_pwr.o"
+"sed13\stm32f1xx_hal_flash.o"
+"sed13\stm32f1xx_hal_tim_ex.o"
+"sed13\stm32f1xx_hal_gpio.o"
+"sed13\stm32f1xx_hal_uart.o"
+"sed13\stm32f1xx_hal_rcc_ex.o"
+"sed13\stm32f1xx_hal_flash_ex.o"
+"sed13\startup_stm32f103xb.o"
+"sed13\main.o"
+"sed13\stm32f1xx_it.o"
+"sed13\stm32f1xx_hal_msp.o"
+"sed13\sed1335-stm32.o"
+"sed13\graphic.o"
+"sed13\sed1335.o"
+--library_type=microlib --strict --scatter "sed13\sed13.sct"
+--diag_suppress=L6329 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "sed13.map" -o sed13\sed13.axf

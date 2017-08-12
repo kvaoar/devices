@@ -31,7 +31,7 @@
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f1xx_hal.h"
+#include "stm32f1xx.h"
 #include "usb_device.h"
 
 /* USER CODE BEGIN Includes */
@@ -66,6 +66,15 @@ static void MX_USART2_IRDA_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+if(huart->Instance == USART1){
+
+}
+}
+
 		char buf[255];
 		
 		uint32_t Coder(uint32_t adc_val, uint8_t MARK){
@@ -129,7 +138,7 @@ int main(void)
 		read_regs(0, reg, 11);
 		for (int i = 0; i < 11;i++){
 				sprintf(buf,"r%02X v%02X\r\n",i,reg[i]);
-				CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
+				//CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
 		}
 		
 volatile int32_t i = 0;
@@ -154,8 +163,10 @@ uint32_t code = 0;
 			else i = m;
 			double u = (5000.0*i/((16777216/2)-1));
 		uint32_t tmp = Coder(code, 0x80);
-		CDC_Transmit_FS((uint8_t*)&tmp,4);
-		HAL_Delay(3);
+		
+			toslink_transmit(tmp);
+			//CDC_Transmit_FS((uint8_t*)&tmp,4);
+		//HAL_Delay(100);
 			
 		//	sprintf(buf,"%08X %9.3f\r\n",code, u);
 		//	CDC_Transmit_FS((uint8_t*)buf,strlen(buf));
@@ -218,7 +229,7 @@ void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_64;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -236,7 +247,7 @@ void MX_USART1_UART_Init(void)
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.Mode = UART_MODE_RX;
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   HAL_UART_Init(&huart1);
@@ -248,10 +259,10 @@ void MX_USART2_IRDA_Init(void)
 {
 
   hirda2.Instance = USART2;
-  hirda2.Init.BaudRate = 115200;
+  hirda2.Init.BaudRate = 1000000;
   hirda2.Init.WordLength = IRDA_WORDLENGTH_8B;
   hirda2.Init.Parity = IRDA_PARITY_NONE;
-  hirda2.Init.Mode = IRDA_MODE_TX_RX;
+  hirda2.Init.Mode = IRDA_MODE_TX;
   hirda2.Init.Prescaler = 1;
   hirda2.Init.IrDAMode = IRDA_POWERMODE_NORMAL;
   HAL_IRDA_Init(&hirda2);

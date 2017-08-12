@@ -7,4 +7,5 @@ hirda = irda;
 
 void toslink_transmit(uint32_t data){
 	HAL_IRDA_Transmit( hirda,(uint8_t*)&data,4,100);
+	//HAL_IRDA_Transmit( hirda,"test\n",5,1000);
 };

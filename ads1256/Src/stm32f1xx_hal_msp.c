@@ -154,6 +154,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     HAL_GPIO_Init(TSSOP_RX_GPIO_Port, &GPIO_InitStruct);
 
     __HAL_AFIO_REMAP_USART1_ENABLE();
+    /* Peripheral interrupt init */
+    HAL_NVIC_SetPriority(USART1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
   /* USER CODE END USART1_MspInit 1 */
@@ -178,7 +181,7 @@ void HAL_IRDA_MspInit(IRDA_HandleTypeDef* hirda)
     PA3     ------> USART2_RX 
     */
     GPIO_InitStruct.Pin = TOSLINK_TX_Pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     HAL_GPIO_Init(TOSLINK_TX_GPIO_Port, &GPIO_InitStruct);
 
@@ -210,6 +213,9 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PB7     ------> USART1_RX 
     */
     HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|TSSOP_RX_Pin);
+
+    /* Peripheral interrupt DeInit*/
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
 
   }
   /* USER CODE BEGIN USART1_MspDeInit 1 */
