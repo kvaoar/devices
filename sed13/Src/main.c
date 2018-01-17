@@ -42,10 +42,12 @@
 /* USER CODE BEGIN Includes */
 #include "graphic.h"
 #include "sed1335.h"
+#include "term.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
-UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart3;
+DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
@@ -55,7 +57,8 @@ UART_HandleTypeDef huart1;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_USART1_UART_Init(void);
+static void MX_DMA_Init(void);
+static void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
@@ -63,6 +66,8 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
+
+
 
 /* USER CODE END 0 */
 
@@ -91,61 +96,28 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART1_UART_Init();
+  MX_DMA_Init();
+  MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
   HAL_Delay(1000);
   
-GLCD_Initialize();
-GLCD_ClearGraphic();	
-GLCD_ClearText();
+TermInit(&huart3);
 
 uint8_t pos = 0;
 uint8_t strnum = 0;
 char c = 0;
-		GLCD_TextGoTo(pos,strnum);
-		GLCD_WriteCommand(SED1335_MWRITE);
-		GLCD_WriteData('>');
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		if(HAL_UART_Receive(&huart1,(uint8_t*)&c,1,1000) == HAL_OK)
-		{
-		if(c == '\n') 
-				{
-				strnum++;
-				pos = 0;					
-				if (strnum >= 40){
-					GLCD_ClearGraphic();	
-					GLCD_ClearText();
-					strnum = 0;
-					}
-				}
-		GLCD_TextGoTo(pos,strnum);
-		GLCD_WriteCommand(SED1335_MWRITE);
-		GLCD_WriteData(c);
-		pos++; 
-		if(pos >= 40) 
-			{
-			strnum++; 
-				pos = 0;
-			if (strnum >= 30){
-				GLCD_ClearGraphic();	
-				GLCD_ClearText();
-				strnum = 0;
-				}
-			}
-		}
+
+	  TermProc();
   /* USER CODE END WHILE */
-  /*
-		
-GLCD_TextGoTo(7,12);
-GLCD_WriteText("casa473365436536543654365436543653");
-HAL_Delay(5);*/
-  
+
   /* USER CODE BEGIN 3 */
 
   }
@@ -198,22 +170,37 @@ void SystemClock_Config(void)
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-/* USART1 init function */
-static void MX_USART1_UART_Init(void)
+/* USART3 init function */
+static void MX_USART3_UART_Init(void)
 {
 
-  huart1.Instance = USART3;
-  huart1.Init.BaudRate = 115200;
-  huart1.Init.WordLength = UART_WORDLENGTH_8B;
-  huart1.Init.StopBits = UART_STOPBITS_1;
-  huart1.Init.Parity = UART_PARITY_NONE;
-  huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart1) != HAL_OK)
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
   {
     _Error_Handler(__FILE__, __LINE__);
   }
+
+}
+
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
 
@@ -243,7 +230,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PD1 */
   GPIO_InitStruct.Pin = GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA0 PA1 PA2 PA3 
@@ -303,7 +290,7 @@ void assert_failed(uint8_t* file, uint32_t line)
 #endif
 
 /**
-  * @}  
+  * @}
   */ 
 
 /**

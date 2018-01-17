@@ -12,6 +12,7 @@
 
   GPIO_InitTypeDef GPIO_InitStruct;
 
+  void delay(){__NOP();__NOP();__NOP();__NOP();__NOP();}
 
 //-------------------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------
@@ -24,12 +25,7 @@ void GLCD_InitPorts(void)
   HAL_GPIO_Init(SED1335_PORT, &GPIO_InitStruct);
 	
    HAL_GPIO_WritePin(SED1335_PORT, SED1335_A0 | SED1335_WR | SED1335_RD | SED1335_CS, GPIO_PIN_SET);
-
-	__nop();
-    __nop();
-    __nop();
-    __nop();
-    __nop();
+   delay();
 HAL_GPIO_WritePin(SED1335_PORT, SED1335_RES, GPIO_PIN_SET);
 }
 //-------------------------------------------------------------------------------------------------
@@ -37,18 +33,14 @@ HAL_GPIO_WritePin(SED1335_PORT, SED1335_RES, GPIO_PIN_SET);
 void GLCD_WriteData(unsigned char dataToWrite)
 {
 SED1335_PORT->ODR = (SED1335_PORT->ODR&0xFF00)|(dataToWrite << SED1335_D0);
-/*SED1335_PORT->BSRR = (dataToWrite « SED1335_D0);
+/*SED1335_PORT->BSRR = (dataToWrite ï¿½ SED1335_D0);
 dataToWrite ^= 0xFF;
 
-SED1335_PORT->BRR = (dataToWrite « SED1335_D0);*/
+SED1335_PORT->BRR = (dataToWrite ï¿½ SED1335_D0);*/
 
 
    SED1335_PORT->BRR = (SED1335_CS | SED1335_A0 | SED1335_WR);
-    __nop();
-    __nop();
-    __nop();
-    __nop();
-    __nop();
+   delay();
 	SED1335_PORT->BSRR = (SED1335_CS | SED1335_A0 | SED1335_WR);
 }
 //-------------------------------------------------------------------------------------------------
@@ -56,16 +48,12 @@ SED1335_PORT->BRR = (dataToWrite « SED1335_D0);*/
 void GLCD_WriteCommand(unsigned char commandToWrite)
 {
 SED1335_PORT->ODR = (SED1335_PORT->ODR&0xFF00)|(commandToWrite << SED1335_D0);
-/*SED1335_PORT->BSRR = (dataToWrite « SED1335_D0);
+/*SED1335_PORT->BSRR = (dataToWrite ï¿½ SED1335_D0);
 dataToWrite ^= 0xFF;
 
-SED1335_PORT->BRR = (dataToWrite « SED1335_D0);*/
+SED1335_PORT->BRR = (dataToWrite ï¿½ SED1335_D0);*/
 SED1335_PORT->BRR =(SED1335_CS | SED1335_WR);	
-    __nop();
-    __nop();
-    __nop();
-    __nop();
-    __nop();
+delay();
 SED1335_PORT->BSRR =(SED1335_CS | SED1335_WR);
 }
 //-------------------------------------------------------------------------------------------------
@@ -80,11 +68,7 @@ unsigned char tmp;
 HAL_GPIO_Init(SED1335_PORT, &GPIO_InitStruct);
 	
 SED1335_PORT->BRR =(SED1335_CS | SED1335_RD);
-    __nop();
-    __nop();
-    __nop();
-    __nop();
-    __nop();
+delay();
 tmp = (( (uint16_t)SED1335_PORT->IDR >> SED1335_D0) & 0xFF);
 
 	

@@ -76,6 +76,7 @@ char GLCD_ReadByteFromROMMemory(char *);
 void GLCD_ClearText(void);
 void GLCD_ClearGraphic(void);
 void GLCD_TextGoTo(unsigned char, unsigned char);
+void GLCD_WriteChar(char c);
 void GLCD_WriteText(char *);
 
 void GLCD_SetPixel(unsigned int x,unsigned int y, int color);

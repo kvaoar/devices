@@ -6,7 +6,7 @@
 extern void GLCD_InitPorts(void);
 
 //-------------------------------------------------------------------------------------------------
-// Funkcja inicjalizacji wyœwietlacza
+// Funkcja inicjalizacji wyï¿½wietlacza
 //-------------------------------------------------------------------------------------------------
 void GLCD_Initialize(void)
 {
@@ -54,7 +54,7 @@ GLCD_WriteCommand(SED1335_DISP_ON);
 GLCD_WriteData(SED1335_FLASH);
 }
 //-------------------------------------------------------------------------------------------------
-// Funkcja zapalaj¹ca piksel
+// Funkcja zapalajï¿½ca piksel
 //-------------------------------------------------------------------------------------------------
 void GLCD_SetPixel(unsigned int x,unsigned int y, int color)
 {
@@ -74,6 +74,12 @@ GLCD_SetCursorAddress(address);
 GLCD_WriteCommand(SED1335_MWRITE);
 GLCD_WriteData(tmp);
 }
+
+void GLCD_WriteChar(char c)
+{
+GLCD_WriteCommand(SED1335_MWRITE);
+GLCD_WriteData(c);
+}
 //-------------------------------------------------------------------------------------------------
 // Funkcja wyswietlajaca tekst
 //-------------------------------------------------------------------------------------------------
@@ -84,7 +90,7 @@ while(*tekst)
 	GLCD_WriteData(*tekst++);
 }
 //-------------------------------------------------------------------------------------------------
-// Funkcja wyœwietlaj¹ca tekst z pamiêci programu (AVR)
+// Funkcja wyï¿½wietlajï¿½ca tekst z pamiï¿½ci programu (AVR)
 //-------------------------------------------------------------------------------------------------
 void GLCD_WriteTextP(char * tekst)
 {
@@ -93,7 +99,7 @@ while(GLCD_ReadByteFromROMMemory(tekst))
 	GLCD_WriteData(GLCD_ReadByteFromROMMemory(tekst++));
 }
 //-------------------------------------------------------------------------------------------------
-// Funkcja ustawiaj¹ca adres kursora
+// Funkcja ustawiajï¿½ca adres kursora
 //-------------------------------------------------------------------------------------------------
 void GLCD_SetCursorAddress(unsigned int address)
 {
